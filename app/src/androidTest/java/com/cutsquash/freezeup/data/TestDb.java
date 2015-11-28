@@ -124,6 +124,8 @@ public class TestDb extends AndroidTestCase {
                     "' did not match the expected value '" +
                     expectedValue + "'. " , expectedValue, cursor.getString(idx));
 
+            Log.d(TAG, "Found " + columnName);
+
         }
 
         assertFalse( "Error: More than one record returned from location query",

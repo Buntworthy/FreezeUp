@@ -1,11 +1,14 @@
 package com.cutsquash.freezeup.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Justin on 28/11/2015.
@@ -29,8 +32,6 @@ public class TestDb extends AndroidTestCase {
 
     // Test database creation
     public void testCreateDb() throws Throwable {
-
-        Log.v(TAG, "Testing");
 
         DbHelper mDbHelper = new DbHelper(this.mContext);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -79,6 +80,56 @@ public class TestDb extends AndroidTestCase {
         // entry columns
         assertTrue("Error: The database doesn't contain all of the required columns",
                 locationColumnHashSet.isEmpty());
+        db.close();
+    }
+
+    public void testAddItem() throws Throwable {
+
+        DbHelper mDbHelper = new DbHelper(getContext());
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Contract.COL_ITEM_NAME, "Tasty meal");
+        values.put(Contract.COL_DATE, System.currentTimeMillis());
+        values.put(Contract.COL_QUANTITY, 2);
+        values.put(Contract.COL_IMAGE, "path_to_image");
+
+        long id = db.insert(Contract.TABLE_NAME, null, values);
+
+        // Verify we got a row back.
+        assertTrue(id != -1);
+
+        // Get the item back
+        Cursor cursor = db.query(
+                Contract.TABLE_NAME,  // Table to Query
+                null, // all columns
+                null, // Columns for the "where" clause
+                null, // Values for the "where" clause
+                null, // columns to group by
+                null, // columns to filter by row groups
+                null // sort order
+        );
+
+        assertTrue("Error: No Records returned from query", cursor.moveToFirst());
+
+        // Check that the entries are as we expect
+        Set<Map.Entry<String, Object>> valueSet = values.valueSet();
+        for (Map.Entry<String, Object> entry : valueSet) {
+            String columnName = entry.getKey();
+            int idx = cursor.getColumnIndex(columnName);
+
+            assertFalse("Column '" + columnName + "' not found. ", idx == -1);
+            String expectedValue = entry.getValue().toString();
+            assertEquals("Value '" + entry.getValue().toString() +
+                    "' did not match the expected value '" +
+                    expectedValue + "'. " , expectedValue, cursor.getString(idx));
+
+        }
+
+        assertFalse( "Error: More than one record returned from location query",
+                cursor.moveToNext() );
+
+        cursor.close();
         db.close();
     }
 }

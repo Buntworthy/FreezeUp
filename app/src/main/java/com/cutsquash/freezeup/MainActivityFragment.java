@@ -1,5 +1,8 @@
 package com.cutsquash.freezeup;
 
+import android.app.Activity;
+import android.content.ContentUris;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.cutsquash.freezeup.data.Contract;
@@ -35,6 +39,19 @@ public class MainActivityFragment extends Fragment
         ListView listView = (ListView) rootView.findViewById(R.id.list_view);
         listView.setAdapter(mItemAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Start the edit activity
+                Cursor c = (Cursor) parent.getItemAtPosition(position);
+                int itemId = c.getInt(c.getColumnIndex(Contract._ID));
+                Intent intent = new Intent(getActivity(), EditActivity.class)
+                        .setData(ContentUris.withAppendedId(Contract.BASE_CONTENT_URI, itemId));
+                startActivity(intent);
+
+            }
+        });
+
         return rootView;
     }
 
@@ -47,7 +64,7 @@ public class MainActivityFragment extends Fragment
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(),
-                Contract.BASE_CONTENT_URI,
+                Contract.CONTENT_URI,
                 null, null, null, null);
     }
 

@@ -3,17 +3,38 @@ package com.cutsquash.freezeup.data;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * Created by Justin on 26/11/2015.
  */
 public class ItemProvider extends ContentProvider {
 
+    public static final String TAG = ItemProvider.class.getSimpleName();
+
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
     private DbHelper mDbHelper;
+
+    private final static int ALL_ITEMS = 100;
+    private final static int SINGLE_ITEM = 101;
+
+    static UriMatcher buildUriMatcher() {
+
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = Contract.AUTHORITY;
+
+        // For each type of URI you want to add, create a corresponding code.
+        matcher.addURI(authority, Contract.PATH_ITEMS, ALL_ITEMS);
+        matcher.addURI(authority, Contract.PATH_ITEMS + "/#", SINGLE_ITEM);
+
+        return matcher;
+    }
 
     @Override
     public boolean onCreate() {
@@ -24,10 +45,29 @@ public class ItemProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        // For now just return everything for any request
+
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        return db.query(Contract.TABLE_NAME,
-                null, null, null, null, null, null);
+        Cursor cursor;
+
+        switch (sUriMatcher.match(uri)) {
+
+            case ALL_ITEMS:
+                cursor = db.query(Contract.TABLE_NAME,
+                            null, null, null, null, null, null);
+                break;
+
+            // If the incoming URI was for a single row
+            case SINGLE_ITEM:
+                // Get the id and use it as the selection
+                cursor = db.query(Contract.TABLE_NAME, null,
+                        Contract._ID + "= ?", new String[]{uri.getLastPathSegment()}, null, null, null);
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        return cursor;
     }
 
     @Nullable

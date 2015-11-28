@@ -22,7 +22,7 @@ public class TestProvider extends AndroidTestCase {
     public void testInsertAndRead() {
         ContentValues values = TestUtilities.createExampleValues();
         Uri returnUri = getContext().getContentResolver()
-                .insert(Contract.BASE_CONTENT_URI, values);
+                .insert(Contract.CONTENT_URI, values);
 
         long locationRowId = ContentUris.parseId(returnUri);
 
@@ -31,7 +31,7 @@ public class TestProvider extends AndroidTestCase {
         Log.d(TAG, "New row id: " + locationRowId);
 
         Cursor c = getContext().getContentResolver()
-                .query(Contract.BASE_CONTENT_URI,
+                .query(Contract.CONTENT_URI,
                         null, null, null, null, null);
         TestUtilities.validateCursor(TAG + "-testInsertAndRead", c, values);
     }

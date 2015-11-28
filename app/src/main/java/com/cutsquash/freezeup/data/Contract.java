@@ -13,6 +13,9 @@ public class Contract implements BaseColumns {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_ITEMS = "items";
 
+    public static final Uri CONTENT_URI =
+            BASE_CONTENT_URI.buildUpon().appendPath(PATH_ITEMS).build();
+
     // Freezer items table
     public static final String TABLE_NAME = "items";
 

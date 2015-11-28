@@ -26,9 +26,8 @@ public class ItemProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         // For now just return everything for any request
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor c = db.query(Contract.TABLE_NAME,
+        return db.query(Contract.TABLE_NAME,
                 null, null, null, null, null, null);
-        return c;
     }
 
     @Nullable
@@ -43,18 +42,16 @@ public class ItemProvider extends ContentProvider {
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         long rowId = db.insert(Contract.TABLE_NAME, null, values);
-        Uri returnUri = ContentUris.withAppendedId(uri, rowId);
 
-        return returnUri;
+        return ContentUris.withAppendedId(uri, rowId);
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        int nRowsDeleted = db.delete(Contract.TABLE_NAME, selection, selectionArgs);
 
-        return nRowsDeleted;
+        return db.delete(Contract.TABLE_NAME, selection, selectionArgs);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class TestDb extends AndroidTestCase {
         assertTrue("Error: This means that the database has not been created correctly",
                 c.moveToFirst());
 
-        final HashSet<String> tableName = new HashSet<String>();
+        final HashSet<String> tableName = new HashSet<>();
         tableName.add(Contract.TABLE_NAME);
 
         do {
@@ -58,7 +58,7 @@ public class TestDb extends AndroidTestCase {
                 c.moveToFirst());
 
         // Build a HashSet of all of the column names we want to look for
-        final HashSet<String> locationColumnHashSet = new HashSet<String>();
+        final HashSet<String> locationColumnHashSet = new HashSet<>();
         locationColumnHashSet.add(Contract._ID);
         locationColumnHashSet.add(Contract.COL_DATE);
         locationColumnHashSet.add(Contract.COL_IMAGE);
@@ -75,6 +75,7 @@ public class TestDb extends AndroidTestCase {
         // entry columns
         assertTrue("Error: The database doesn't contain all of the required columns",
                 locationColumnHashSet.isEmpty());
+        c.close();
         db.close();
     }
 

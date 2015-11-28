@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.cutsquash.freezeup.data.Contract;
+import com.cutsquash.freezeup.data.ItemProvider;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment
             implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final String TAG = MainActivityFragment.class.getSimpleName();
 
     private ItemAdapter mItemAdapter;
     private static final int ITEM_LOADER = 0;
@@ -46,7 +50,8 @@ public class MainActivityFragment extends Fragment
                 Cursor c = (Cursor) parent.getItemAtPosition(position);
                 int itemId = c.getInt(c.getColumnIndex(Contract._ID));
                 Intent intent = new Intent(getActivity(), EditActivity.class)
-                        .setData(ContentUris.withAppendedId(Contract.BASE_CONTENT_URI, itemId));
+                        .setData(ContentUris.withAppendedId(Contract.CONTENT_URI, itemId));
+                Log.d(TAG, ContentUris.withAppendedId(Contract.CONTENT_URI, itemId).toString());
                 startActivity(intent);
 
             }

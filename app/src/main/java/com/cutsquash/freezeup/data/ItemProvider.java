@@ -50,7 +50,11 @@ public class ItemProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        int nRowsDeleted = db.delete(Contract.TABLE_NAME, selection, selectionArgs);
+
+        return nRowsDeleted;
     }
 
     @Override

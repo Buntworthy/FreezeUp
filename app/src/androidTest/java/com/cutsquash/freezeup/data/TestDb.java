@@ -17,17 +17,12 @@ public class TestDb extends AndroidTestCase {
 
     public static final String TAG = TestDb.class.getSimpleName();
 
-    // Since we want each test to start with a clean slate
-    void deleteTheDatabase() {
-        mContext.deleteDatabase(DbHelper.DATABASE_NAME);
-    }
-
     /*
         This function gets called before each test is executed to delete the database.  This makes
         sure that we always have a clean test.
      */
     public void setUp() {
-        deleteTheDatabase();
+        TestUtilities.deleteTheDatabase(mContext);
     }
 
     // Test database creation
@@ -88,11 +83,7 @@ public class TestDb extends AndroidTestCase {
         DbHelper mDbHelper = new DbHelper(getContext());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(Contract.COL_ITEM_NAME, "Tasty meal");
-        values.put(Contract.COL_DATE, System.currentTimeMillis());
-        values.put(Contract.COL_QUANTITY, 2);
-        values.put(Contract.COL_IMAGE, "path_to_image");
+        ContentValues values = TestUtilities.createExampleValues();
 
         long id = db.insert(Contract.TABLE_NAME, null, values);
 

@@ -2,6 +2,7 @@ package com.cutsquash.freezeup.data;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.util.Log;
@@ -18,7 +19,7 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.deleteTheDatabase(mContext);
     }
 
-    public void testInsert() {
+    public void testInsertAndRead() {
         ContentValues values = TestUtilities.createExampleValues();
         Uri returnUri = getContext().getContentResolver()
                 .insert(Contract.BASE_CONTENT_URI, values);
@@ -28,6 +29,11 @@ public class TestProvider extends AndroidTestCase {
         // Verify we got a row back.
         assertTrue(locationRowId != -1);
         Log.d(TAG, "New row id: " + locationRowId);
+
+        Cursor c = getContext().getContentResolver()
+                .query(Contract.BASE_CONTENT_URI,
+                        null, null, null, null, null);
+        TestUtilities.validateCursor(TAG + "-testInsertAndRead", c, values);
     }
 
 }

@@ -96,6 +96,11 @@ public class ItemProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        int rowId = db.update(Contract.TABLE_NAME,
+                values,
+                Contract._ID + "= ?",
+                new String[]{uri.getLastPathSegment()});
+        return rowId;
     }
 }

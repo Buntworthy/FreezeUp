@@ -15,18 +15,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_name"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:hint="@string/enter_name" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_date"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:hint="@string/enter_date" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_quantity"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:hint="@string/enter_quantity" />
 
 </LinearLayout>

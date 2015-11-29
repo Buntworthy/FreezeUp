@@ -3,4 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
     <string name="title_activity_edit">EditActivity</string>
+
+    <string name="enter_name">Item name</string>
+    <string name="enter_date">Date added</string>
+    <string name="enter_quantity">Quantity</string>
 </resources>

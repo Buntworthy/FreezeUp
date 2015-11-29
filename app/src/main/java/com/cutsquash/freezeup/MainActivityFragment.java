@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.cutsquash.freezeup.data.Contract;
@@ -38,7 +39,7 @@ public class MainActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mItemAdapter = new ItemAdapter(getActivity(), null, 0);
+        mItemAdapter = new ItemAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         ListView listView = (ListView) rootView.findViewById(R.id.list_view);
         listView.setAdapter(mItemAdapter);
@@ -64,6 +65,15 @@ public class MainActivityFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         getLoaderManager().initLoader(ITEM_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        //TODO maybe this isn't a great way?
+        if(!getLoaderManager().hasRunningLoaders()) {
+            getLoaderManager().restartLoader(ITEM_LOADER, null, this);
+        }
+        super.onResume();
     }
 
     @Override

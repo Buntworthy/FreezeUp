@@ -74,8 +74,18 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
             values.put(Contract.COL_QUANTITY, quantity);
 
             // Commit to database
-            getActivity().getContentResolver().update(mUri, values, null, null);
-            getActivity().getContentResolver().notifyChange(mUri, null);
+            if (mUri != null) {
+                getActivity().getContentResolver().update(mUri, values, null, null);
+                getActivity().getContentResolver().notifyChange(mUri, null);
+            } else {
+                // TODO Temporary image path
+                values.put(Contract.COL_IMAGE, "image_path");
+                Uri mUri = getActivity().getContentResolver().insert(Contract.CONTENT_URI, values);
+                getActivity().getContentResolver().notifyChange(mUri, null);
+            }
+
+            // Go back to the home screen
+            getActivity().finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -83,7 +93,14 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
+        Intent intent = getActivity().getIntent();
+        if (intent.getData() == null){
+            // Set up for adding new item
+            Log.d(TAG, "No existing item, adding new");
+            mUri = null;
+        } else {
+            getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
+        }
         super.onActivityCreated(savedInstanceState);
     }
 

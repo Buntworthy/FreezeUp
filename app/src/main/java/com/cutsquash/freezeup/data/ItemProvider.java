@@ -1,5 +1,6 @@
 package com.cutsquash.freezeup.data;
 
+import android.annotation.TargetApi;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -91,7 +92,11 @@ public class ItemProvider extends ContentProvider {
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        return db.delete(Contract.TABLE_NAME, selection, selectionArgs);
+        int numRows = db.delete(Contract.TABLE_NAME,
+                Contract._ID + "= ?",
+                new String[]{uri.getLastPathSegment()});
+
+        return numRows;
     }
 
     @Override
@@ -101,6 +106,13 @@ public class ItemProvider extends ContentProvider {
                 values,
                 Contract._ID + "= ?",
                 new String[]{uri.getLastPathSegment()});
+
         return rowId;
+    }
+
+    @Override
+    public void shutdown() {
+        mDbHelper.close();
+        super.shutdown();
     }
 }

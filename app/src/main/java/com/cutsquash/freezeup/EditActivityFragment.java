@@ -1,6 +1,7 @@
 package com.cutsquash.freezeup;
 
 import android.app.DatePickerDialog;
+import android.support.v4.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,6 +25,9 @@ import android.widget.Toast;
 
 import com.cutsquash.freezeup.data.Contract;
 import com.cutsquash.freezeup.data.ItemProvider;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -49,15 +53,8 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        2015, 1,1);
-                datePicker.show();
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(), "datePicker");
 
 
             }
@@ -85,16 +82,12 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
             EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
             String name = nameView.getText().toString();
 
-            TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
-            Long date = Long.parseLong(dateView.getText().toString());
-
             EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
             int quantity = Integer.parseInt(quantityView.getText().toString());
 
             // Put into content values
             ContentValues values = new ContentValues();
             values.put(Contract.COL_ITEM_NAME, name);
-            values.put(Contract.COL_DATE, date);
             values.put(Contract.COL_QUANTITY, quantity);
 
             // Commit to database
@@ -150,7 +143,8 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
         EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
         nameView.setText(itemName);
 
-        String itemDate = Long.toString(data.getLong(data.getColumnIndex(Contract.COL_DATE)));
+        Date date = new Date(data.getLong(data.getColumnIndex(Contract.COL_DATE)));
+        String itemDate = DateFormat.getDateInstance().format(date);
         TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
         dateView.setText(itemDate);
 
@@ -167,4 +161,10 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
 
     }
 
+    public void setDate(int year, int month, int day) {
+        Toast.makeText(getActivity(),
+                Integer.toString(year) + "/" +
+                Integer.toString(month) + "/" +
+                Integer.toString(day), Toast.LENGTH_SHORT).show();
+    }
 }

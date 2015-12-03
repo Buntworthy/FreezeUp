@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
+import junit.framework.Test;
+
 /**
  * Created by Justin on 28/11/2015.
  */
@@ -44,7 +46,26 @@ public class TestProvider extends AndroidTestCase {
         TestUtilities.validateCursor(TAG + "-testInsertAndRead", c, values);
     }
 
-    //TODO test update
+    public void testUpdate() {
+
+        ContentValues values = TestUtilities.createExampleValues();
+        Uri uri = mContext.getContentResolver()
+                .insert(Contract.CONTENT_URI, values);
+
+        // update the values
+        values.put(Contract.COL_ITEM_NAME, "Other meal");
+        int numRows = mContext.getContentResolver()
+                .update(uri, values, null, null);
+
+        assertTrue("No row updated", numRows > 0);
+
+        // get the updated value and check
+        Cursor c = mContext.getContentResolver()
+                .query(uri,
+                        null, null, null, null, null);
+        TestUtilities.validateCursor(TAG + "-testUpdate", c, values);
+        c.close();
+    }
 
     public void testDelete() {
 

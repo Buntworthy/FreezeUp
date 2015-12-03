@@ -69,7 +69,7 @@ public class MainActivityFragment extends Fragment
 
     @Override
     public void onResume() {
-        //TODO maybe this isn't a great way?
+        // Is this the best way?
         if(!getLoaderManager().hasRunningLoaders()) {
             getLoaderManager().restartLoader(ITEM_LOADER, null, this);
         }

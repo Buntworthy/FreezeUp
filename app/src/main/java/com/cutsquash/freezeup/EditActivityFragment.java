@@ -1,5 +1,6 @@
 package com.cutsquash.freezeup;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,8 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cutsquash.freezeup.data.Contract;
 import com.cutsquash.freezeup.data.ItemProvider;
@@ -39,7 +42,28 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_edit, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
+
+        // set the listener for the edit date view
+        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
+        dateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePicker = new DatePickerDialog(getActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        2015, 1,1);
+                datePicker.show();
+
+
+            }
+        });
+
+        return rootView;
     }
 
     @Override
@@ -61,7 +85,7 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
             EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
             String name = nameView.getText().toString();
 
-            EditText dateView = (EditText) rootView.findViewById(R.id.edit_date);
+            TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
             Long date = Long.parseLong(dateView.getText().toString());
 
             EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
@@ -127,7 +151,7 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
         nameView.setText(itemName);
 
         String itemDate = Long.toString(data.getLong(data.getColumnIndex(Contract.COL_DATE)));
-        EditText dateView = (EditText) rootView.findViewById(R.id.edit_date);
+        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
         dateView.setText(itemDate);
 
         String itemQantity = Integer.toString(data.getInt(data.getColumnIndex(Contract.COL_QUANTITY)));
@@ -142,4 +166,5 @@ public class EditActivityFragment extends Fragment implements LoaderManager.Load
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
+
 }

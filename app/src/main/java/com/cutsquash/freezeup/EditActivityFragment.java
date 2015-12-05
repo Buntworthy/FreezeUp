@@ -1,16 +1,8 @@
 package com.cutsquash.freezeup;
 
-import android.app.DatePickerDialog;
-import android.support.v4.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,16 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.cutsquash.freezeup.data.Contract;
-import com.cutsquash.freezeup.data.ItemProvider;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -49,15 +34,15 @@ public class EditActivityFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
 
         // set the listener for the edit date view
-        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
-        dateView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getFragmentManager(), "datePicker");
-
-            }
-        });
+//        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
+//        dateView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DialogFragment newFragment = new DatePickerFragment();
+//                newFragment.show(getFragmentManager(), "datePicker");
+//
+//            }
+//        });
 
         return rootView;
     }
@@ -114,7 +99,7 @@ public class EditActivityFragment extends Fragment
             // Set up for adding new item
             Log.d(TAG, "No existing item, adding new");
         } else {
-            mItem = new Item(this, intent.getData());
+            mItem = new Item(this, this, intent.getData());
         }
         mItem.loadItem();
         super.onActivityCreated(savedInstanceState);
@@ -125,8 +110,8 @@ public class EditActivityFragment extends Fragment
     public void setDate(int year, int month, int day) {
         Toast.makeText(getActivity(),
                 Integer.toString(year) + "/" +
-                Integer.toString(month) + "/" +
-                Integer.toString(day), Toast.LENGTH_SHORT).show();
+                        Integer.toString(month) + "/" +
+                        Integer.toString(day), Toast.LENGTH_SHORT).show();
     }
 
     @Override

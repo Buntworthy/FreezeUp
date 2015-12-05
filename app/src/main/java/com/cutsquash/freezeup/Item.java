@@ -1,9 +1,10 @@
 package com.cutsquash.freezeup;
 
-import android.content.Intent;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -11,20 +12,23 @@ import android.support.v4.content.Loader;
 /**
  * Class to represent item data and save state
  */
-public class Item implements LoaderManager.LoaderCallbacks<Cursor>{
+public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EDIT_ITEM_LOADER = 1;
 
     private ItemViewer mItemViewer;
+    private Fragment mFragment;
     private Uri mUri;
     private String mName = "test";
     private long mDate = 1324354;
     private int mQuantity = 1;
 
-    public Item(ItemViewer itemViewer, Uri uri) {
+    public Item(ItemViewer itemViewer, Fragment fragment, Uri uri) {
 
         // Store reference to ItemViewer which created this object
         mItemViewer = itemViewer;
+        // Parent fragment
+        mFragment = fragment;
         // Store the uri that refers to this item in the db
         mUri = uri;
 
@@ -34,7 +38,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor>{
 
         // if the uri is not null, make the call to initialise the object
         if (mUri != null) {
-            mItemViewer.getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
+            mFragment.getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
         }
     }
 
@@ -73,7 +77,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor>{
     // Loader callbacks
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mItemViewer.getContext(),
+        return new CursorLoader(mFragment.getContext(),
                     mUri,
                     null, null, null, null);
     }
@@ -81,6 +85,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor>{
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
+        // Update the item from the cursor
         mItemViewer.updateFields(this);
 
     }

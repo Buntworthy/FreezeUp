@@ -10,8 +10,4 @@ public interface ItemViewer {
 
     void updateFields(Item item);
 
-    // Methods needed to use the cursor loader
-    LoaderManager getLoaderManager();
-    Context getContext();
-
 }

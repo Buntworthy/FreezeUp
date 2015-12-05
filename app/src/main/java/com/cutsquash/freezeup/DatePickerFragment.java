@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -28,7 +27,7 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        EditActivityFragment f = (EditActivityFragment) getActivity()
+        DetailActivityFragment f = (DetailActivityFragment) getActivity()
                 .getSupportFragmentManager()
                 .findFragmentById(R.id.edit_fragment);
         f.setDate(year, month, day);

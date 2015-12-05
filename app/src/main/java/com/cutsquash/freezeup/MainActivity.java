@@ -1,18 +1,14 @@
 package com.cutsquash.freezeup;
 
-import android.content.ContentUris;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.cutsquash.freezeup.data.Contract;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Go to the edit screen to add a new item
-                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
                 Log.d(TAG, "Starting edit intent for adding new item");
                 startActivity(intent);
             }

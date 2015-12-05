@@ -1,6 +1,5 @@
 package com.cutsquash.freezeup;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,7 +17,6 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.cutsquash.freezeup.data.Contract;
-import com.cutsquash.freezeup.data.ItemProvider;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -50,7 +48,7 @@ public class MainActivityFragment extends Fragment
                 // Start the edit activity
                 Cursor c = (Cursor) parent.getItemAtPosition(position);
                 int itemId = c.getInt(c.getColumnIndex(Contract._ID));
-                Intent intent = new Intent(getActivity(), EditActivity.class)
+                Intent intent = new Intent(getActivity(), DetailActivity.class)
                         .setData(ContentUris.withAppendedId(Contract.CONTENT_URI, itemId));
                 Log.d(TAG, ContentUris.withAppendedId(Contract.CONTENT_URI, itemId).toString());
                 startActivity(intent);

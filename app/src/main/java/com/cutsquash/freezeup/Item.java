@@ -8,11 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
+
+import com.cutsquash.freezeup.data.Contract;
 
 /**
  * Class to represent item data and save state
  */
 public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final String TAG = Item.class.getSimpleName();
 
     private static final int EDIT_ITEM_LOADER = 1;
 
@@ -84,6 +89,14 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        if (data.moveToFirst()) {
+            mName = data.getString(data.getColumnIndex(Contract.COL_ITEM_NAME));
+            mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
+            mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));
+        } else {
+            Log.e(TAG, "No values from cursor");
+        }
 
         // Update the item from the cursor
         mItemViewer.updateFields(this);

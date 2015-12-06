@@ -10,9 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -58,18 +56,9 @@ public class DetailActivityFragment extends Fragment
             Log.d(TAG, "No existing item, adding new");
         } else {
             mItem = new Item(this, this, intent.getData());
+            mItem.loadItem();
         }
-        mItem.loadItem();
         super.onActivityCreated(savedInstanceState);
-    }
-
-
-
-    public void setDate(int year, int month, int day) {
-        Toast.makeText(getActivity(),
-                Integer.toString(year) + "/" +
-                        Integer.toString(month) + "/" +
-                        Integer.toString(day), Toast.LENGTH_SHORT).show();
     }
 
     @Override

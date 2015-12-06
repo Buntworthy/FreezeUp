@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Go to the edit screen to add a new item
-                Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
                 Log.d(TAG, "Starting edit intent for adding new item");
                 startActivity(intent);
             }

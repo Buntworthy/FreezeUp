@@ -1,8 +1,8 @@
 package com.cutsquash.freezeup;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,30 +10,33 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import java.util.zip.Inflater;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment
-        implements ItemViewer {
+public class EditActivityFragment extends Fragment implements ItemViewer {
 
-    public static final String TAG = DetailActivityFragment.class.getSimpleName();
-
+    public static final String TAG = EditActivityFragment.class.getSimpleName();
     private Item mItem;
 
-    public DetailActivityFragment() {
+    public EditActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        setHasOptionsMenu(true);
+        return inflater.inflate(R.layout.fragment_edit, container, false);
 
-        return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_edit_fragment, menu);
     }
 
     @Override
@@ -41,8 +44,14 @@ public class DetailActivityFragment extends Fragment
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                save();
+                getActivity().finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -65,22 +74,28 @@ public class DetailActivityFragment extends Fragment
 
     @Override
     public void updateFields(Item item) {
-
         View rootView = getView();
 
-        TextView nameView = (TextView) rootView.findViewById(R.id.detail_name);
+        EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
         nameView.setText(item.getName());
 
-        TextView dateView = (TextView) rootView.findViewById(R.id.detail_date);
+        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
         dateView.setText(item.getDateString());
 
-        TextView quantityView = (TextView) rootView.findViewById(R.id.detail_quantity);
+        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
         quantityView.setText(item.getQuantityString());
+    }
 
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_image);
-        Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
-                .centerCrop().into(imageView);
+    public void save() {
+        // Get the text from the edit text fields and update the item
+        View rootView = getView();
 
+        EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
+        mItem.setName(nameView.getText().toString());
 
+        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
+        mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
+
+        mItem.save();
     }
 }

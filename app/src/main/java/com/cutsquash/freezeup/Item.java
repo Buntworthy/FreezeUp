@@ -1,6 +1,8 @@
 package com.cutsquash.freezeup;
 
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,8 +46,41 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         // if the uri is not null, make the call to initialise the object
         if (mUri != null) {
             mFragment.getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
+        } else {
+            // if mUri is null we are creating a new item
+            Log.d(TAG, "Creating new item");
+            mName = null;
+            mDate = System.currentTimeMillis();
+            mQuantity = 0;
+            mItemViewer.updateFields(this);
         }
     }
+
+    public void save() {
+        if (mUri == null) {
+            ContentValues values = new ContentValues();
+            values.put(Contract.COL_ITEM_NAME, mName);
+            values.put(Contract.COL_DATE, mDate);
+            values.put(Contract.COL_QUANTITY, mQuantity);
+            values.put(Contract.COL_IMAGE, "Dummy");
+            ContentResolver resolver = mFragment.getActivity().getContentResolver();
+            mUri = resolver.insert(Contract.CONTENT_URI, values);
+            resolver.notifyChange(mUri, null);
+
+        } else {
+            // use update instead
+            ContentValues values = new ContentValues();
+            values.put(Contract.COL_ITEM_NAME, mName);
+            values.put(Contract.COL_DATE, mDate);
+            values.put(Contract.COL_QUANTITY, mQuantity);
+            values.put(Contract.COL_IMAGE, "Dummy");
+            ContentResolver resolver = mFragment.getActivity().getContentResolver();
+            int nRows = resolver.update(mUri, values, null, null);
+            resolver.notifyChange(mUri, null);
+        }
+    }
+
+    // Getters and setters
 
     public String getName() {
         return mName;

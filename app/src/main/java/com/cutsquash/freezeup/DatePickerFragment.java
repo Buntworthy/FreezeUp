@@ -30,6 +30,6 @@ public class DatePickerFragment extends DialogFragment
         DetailActivityFragment f = (DetailActivityFragment) getActivity()
                 .getSupportFragmentManager()
                 .findFragmentById(R.id.edit_fragment);
-        f.setDate(year, month, day);
+
     }
 }

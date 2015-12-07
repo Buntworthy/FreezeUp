@@ -82,11 +82,10 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             Log.d(TAG, "Got a result");
             if (resultCode == Activity.RESULT_OK) {
-                // Image captured and saved to fileUri specified in the Intent
-                Toast.makeText(getActivity(), "Got intent", Toast.LENGTH_LONG).show();
+                mItem.imageChanged = true;
 
+                // TODO move to helper function
                 ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
-
                 // Load image with picasso (invalidate to avoid chacheing problems)
                 Picasso.with(getActivity()).invalidate(mfileUri);
                 Picasso.with(getActivity()).load(mfileUri).resize(200, 200)
@@ -112,7 +111,10 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
             case R.id.action_save:
                 mItem.shouldSave = true;
                 getTextFields();
-                getActivity().finish();
+                // Send the user back to the main activity
+                // TODO should we go back to detail or main?
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -138,6 +140,7 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
 
     @Override
     public void onPause() {
+        Log.d(TAG, "Closing the item");
         mItem.close();
         super.onStop();
     }
@@ -163,7 +166,7 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
                 getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 mItem.getImagePath());
         if (imageFile.exists()) {
-            Log.d(TAG, "Loaading existing image");
+            Log.d(TAG, "Loading existing image");
             Picasso.with(getActivity()).load(imageFile).resize(200, 200)
                     .centerCrop().into(imageView);
         } else {

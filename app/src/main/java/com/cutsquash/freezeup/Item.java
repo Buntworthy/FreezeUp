@@ -40,6 +40,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     public String mImagePath = "Dummy";
 
     public boolean shouldSave = false;
+    public boolean imageChanged = false;
 
     public Item(ItemViewer itemViewer, Fragment fragment, Uri uri) {
 
@@ -78,30 +79,34 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
                 values.put(Contract.COL_DATE, mDate);
                 values.put(Contract.COL_QUANTITY, mQuantity);
 
-                // TODO check an internal has image changed flag?
+                // Add the image path if it exists.
+                String imageString = "dummy";
+                if (imageChanged) {
 
-                // Check if there is an image waiting to be saved
-                File src = new File(
-                        mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                        EditActivityFragment.TEMP_IMAGE_FILE);
-                if (src.exists()) {
-                    // Save with a filename we store in the db
-                    String imageString = Long.toString(System.currentTimeMillis());
-                    File dst = new File(
+                    // Check if there is an image waiting to be saved
+                    File src = new File(
                             mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                            imageString);
-                    try {
-                        copy(src, dst);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                            EditActivityFragment.TEMP_IMAGE_FILE);
+                    if (src.exists()) {
+                        // Save with a filename we store in the db
+                        imageString = Long.toString(System.currentTimeMillis());
+                        File dst = new File(
+                                mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                                imageString);
+                        try {
+                            copy(src, dst);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        // Delete the temporary image
+                        src.delete();
+                        values.put(Contract.COL_IMAGE, imageString);
                     }
-                    // Delete the temporary image
-                    src.delete();
-                    values.put(Contract.COL_IMAGE, imageString);
-                } else {
-                    // No image saved so store a placeholder
-                    values.put(Contract.COL_IMAGE, "Dummy");
+
                 }
+                mImagePath = imageString;
+                values.put(Contract.COL_IMAGE, imageString);
+
 
                 ContentResolver resolver = mFragment.getActivity().getContentResolver();
                 mUri = resolver.insert(Contract.CONTENT_URI, values);
@@ -113,7 +118,38 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
                 values.put(Contract.COL_ITEM_NAME, mName);
                 values.put(Contract.COL_DATE, mDate);
                 values.put(Contract.COL_QUANTITY, mQuantity);
-                values.put(Contract.COL_IMAGE, "Dummy");
+
+                // If the image has changed:
+                String imageString = mImagePath;
+                if (imageChanged) {
+                    File src = new File(
+                            mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                            EditActivityFragment.TEMP_IMAGE_FILE);
+                    if (src.exists()) {
+                        // Save with a filename we store in the db
+                        imageString = Long.toString(System.currentTimeMillis());
+                        File dst = new File(
+                                mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                                imageString);
+                        try {
+                            copy(src, dst);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        // Delete the temporary image
+                        src.delete();
+                        // Delete the previous image
+                        File oldImage = new File(
+                                mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                                mImagePath);
+                        oldImage.delete();
+                        values.put(Contract.COL_IMAGE, imageString);
+                    }
+
+                }
+                // update the db
+                mImagePath = imageString;
+                values.put(Contract.COL_IMAGE, imageString);
                 ContentResolver resolver = mFragment.getActivity().getContentResolver();
                 int nRows = resolver.update(mUri, values, null, null);
                 resolver.notifyChange(mUri, null);

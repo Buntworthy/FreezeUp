@@ -91,10 +91,12 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
                 Picasso.with(getActivity()).invalidate(mfileUri);
                 Picasso.with(getActivity()).load(mfileUri).resize(200, 200)
                         .centerCrop().into(imageView);
+
             } else if (resultCode == Activity.RESULT_CANCELED) {
-                // User cancelled the image capture
+                // TODO User cancelled the image capture
             } else {
-                // Image capture failed, advise user
+                // Image capture failed
+                Log.e(TAG, "Image capture failed");
             }
         }
     }
@@ -106,12 +108,10 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_save:
-                save();
+                mItem.shouldSave = true;
+                getTextFields();
                 getActivity().finish();
                 return true;
             default:
@@ -124,7 +124,6 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
 
         Intent intent = getActivity().getIntent();
         if (intent.getData() == null){
-            // We shouldn't view detail without a uri
             Log.e(TAG, "No existing item, adding new");
             mItem = new Item(this, this, null);
         } else {
@@ -136,6 +135,14 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         super.onActivityCreated(savedInstanceState);
 
     }
+
+    @Override
+    public void onPause() {
+        mItem.close();
+        super.onStop();
+    }
+
+    // Item View interface /////////////////////////////////////////////////////////////////////////
 
     @Override
     public void updateFields(Item item) {
@@ -151,11 +158,24 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         quantityView.setText(item.getQuantityString());
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
-        Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
-                .centerCrop().into(imageView);
+
+        File imageFile = new File(
+                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                mItem.getImagePath());
+        if (imageFile.exists()) {
+            Log.d(TAG, "Loaading existing image");
+            Picasso.with(getActivity()).load(imageFile).resize(200, 200)
+                    .centerCrop().into(imageView);
+        } else {
+            Log.d(TAG, "No existing image");
+            Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
+                    .centerCrop().into(imageView);
+        }
     }
 
-    public void save() {
+    // Utility functions ///////////////////////////////////////////////////////////////////////////
+
+    private void getTextFields() {
         // Get the text from the edit text fields and update the item
         View rootView = getView();
 
@@ -165,6 +185,5 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
         mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
 
-        mItem.save();
     }
 }

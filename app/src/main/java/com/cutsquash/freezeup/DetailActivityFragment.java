@@ -1,7 +1,9 @@
 package com.cutsquash.freezeup;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cutsquash.freezeup.data.Contract;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -31,18 +36,29 @@ public class DetailActivityFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         return rootView;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_detail_fragment, menu);
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                Intent intent = new Intent(getActivity(), EditActivity.class)
+                        .setData(mItem.getUri());
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -78,9 +94,19 @@ public class DetailActivityFragment extends Fragment
         quantityView.setText(item.getQuantityString());
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_image);
-        Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
-                .centerCrop().into(imageView);
 
+        File imageFile = new File(
+                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                mItem.getImagePath());
+        if (imageFile.exists()) {
+            Log.d(TAG, "Loaading existing image");
+            Picasso.with(getActivity()).load(imageFile).resize(200, 200)
+                    .centerCrop().into(imageView);
+        } else {
+            Log.d(TAG, "No existing image");
+            Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
+                    .centerCrop().into(imageView);
+        }
 
     }
 }

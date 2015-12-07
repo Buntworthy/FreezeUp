@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -13,6 +14,13 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.cutsquash.freezeup.data.Contract;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Class to represent item data and save state
@@ -29,6 +37,9 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     private String mName = "test";
     private long mDate = 1324354;
     private int mQuantity = 1;
+    public String mImagePath = "Dummy";
+
+    public boolean shouldSave = false;
 
     public Item(ItemViewer itemViewer, Fragment fragment, Uri uri) {
 
@@ -56,54 +67,76 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-    public void save() {
-        if (mUri == null) {
-            ContentValues values = new ContentValues();
-            values.put(Contract.COL_ITEM_NAME, mName);
-            values.put(Contract.COL_DATE, mDate);
-            values.put(Contract.COL_QUANTITY, mQuantity);
-            values.put(Contract.COL_IMAGE, "Dummy");
-            ContentResolver resolver = mFragment.getActivity().getContentResolver();
-            mUri = resolver.insert(Contract.CONTENT_URI, values);
-            resolver.notifyChange(mUri, null);
+    public void close() {
 
-        } else {
-            // use update instead
-            ContentValues values = new ContentValues();
-            values.put(Contract.COL_ITEM_NAME, mName);
-            values.put(Contract.COL_DATE, mDate);
-            values.put(Contract.COL_QUANTITY, mQuantity);
-            values.put(Contract.COL_IMAGE, "Dummy");
-            ContentResolver resolver = mFragment.getActivity().getContentResolver();
-            int nRows = resolver.update(mUri, values, null, null);
-            resolver.notifyChange(mUri, null);
+        // Should the changes be saved?
+        if (shouldSave) {
+            if (mUri == null) {
+                // We are adding and item
+                ContentValues values = new ContentValues();
+                values.put(Contract.COL_ITEM_NAME, mName);
+                values.put(Contract.COL_DATE, mDate);
+                values.put(Contract.COL_QUANTITY, mQuantity);
+
+                // TODO check an internal has image changed flag?
+
+                // Check if there is an image waiting to be saved
+                File src = new File(
+                        mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                        EditActivityFragment.TEMP_IMAGE_FILE);
+                if (src.exists()) {
+                    // Save with a filename we store in the db
+                    String imageString = Long.toString(System.currentTimeMillis());
+                    File dst = new File(
+                            mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                            imageString);
+                    try {
+                        copy(src, dst);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Delete the temporary image
+                    src.delete();
+                    values.put(Contract.COL_IMAGE, imageString);
+                } else {
+                    // No image saved so store a placeholder
+                    values.put(Contract.COL_IMAGE, "Dummy");
+                }
+
+                ContentResolver resolver = mFragment.getActivity().getContentResolver();
+                mUri = resolver.insert(Contract.CONTENT_URI, values);
+                resolver.notifyChange(mUri, null);
+
+            } else {
+                // We are updating an item
+                ContentValues values = new ContentValues();
+                values.put(Contract.COL_ITEM_NAME, mName);
+                values.put(Contract.COL_DATE, mDate);
+                values.put(Contract.COL_QUANTITY, mQuantity);
+                values.put(Contract.COL_IMAGE, "Dummy");
+                ContentResolver resolver = mFragment.getActivity().getContentResolver();
+                int nRows = resolver.update(mUri, values, null, null);
+                resolver.notifyChange(mUri, null);
+            }
         }
     }
 
-    // Getters and setters
+
+    // Getters and setters /////////////////////////////////////////////////////////////////////////
+
+    // Getters /////
+    public Uri getUri() {return mUri; }
 
     public String getName() {
         return mName;
-    }
-
-    public void setName(String mName) {
-        this.mName = mName;
     }
 
     public long getDate() {
         return mDate;
     }
 
-    public void setDate(long mDate) {
-        this.mDate = mDate;
-    }
-
     public int getQuantity() {
         return mQuantity;
-    }
-
-    public void setQuantity(int mQuantity) {
-        this.mQuantity = mQuantity;
     }
 
     public String getQuantityString() {
@@ -114,7 +147,23 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         return Long.toString(mDate);
     }
 
-    // Loader callbacks
+    public String getImagePath() {return mImagePath; }
+
+    // Setters /////
+    public void setName(String mName) {
+        this.mName = mName;
+    }
+
+    public void setDate(long mDate) {
+        this.mDate = mDate;
+    }
+
+    public void setQuantity(int mQuantity) {
+        this.mQuantity = mQuantity;
+    }
+
+
+    // Loader callbacks ////////////////////////////////////////////////////////////////////////////
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(mFragment.getContext(),
@@ -129,6 +178,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
             mName = data.getString(data.getColumnIndex(Contract.COL_ITEM_NAME));
             mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
             mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));
+            mImagePath = data.getString(data.getColumnIndex(Contract.COL_IMAGE));
         } else {
             Log.e(TAG, "No values from cursor");
         }
@@ -141,6 +191,20 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
     }
 
 }

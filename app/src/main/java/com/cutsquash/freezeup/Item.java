@@ -68,6 +68,16 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
+    public void delete() {
+        if (mUri != null) {
+            ContentResolver resolver = mFragment.getActivity().getContentResolver();
+            int nRows = resolver.delete(mUri, null, null);
+            if (nRows != 1) {
+                Log.e(TAG, "Unexpected number of item deleted");
+            }
+        }
+    }
+
     public void close() {
 
         // Should the changes be saved?

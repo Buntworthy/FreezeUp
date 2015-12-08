@@ -108,14 +108,23 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.action_save:
                 mItem.shouldSave = true;
                 getTextFields();
                 // Send the user back to the main activity
                 // TODO should we go back to detail or main?
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
+                Intent postSaveIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(postSaveIntent);
                 return true;
+
+            case R.id.action_delete:
+                // TODO confirmation dialog
+                mItem.delete();
+                Intent postDeleteIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(postDeleteIntent);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

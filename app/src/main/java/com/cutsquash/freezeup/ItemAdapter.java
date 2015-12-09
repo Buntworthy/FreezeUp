@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import com.cutsquash.freezeup.data.Contract;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Created by Justin on 28/11/2015.
  */
@@ -34,7 +37,10 @@ public class ItemAdapter extends CursorAdapter {
         TextView nameView = (TextView) view.findViewById(R.id.item_name);
         nameView.setText(itemName);
 
-        String itemDate = Long.toString(cursor.getLong(cursor.getColumnIndex(Contract.COL_DATE)));
+        DateFormat df = DateFormat.getDateInstance();
+
+        Long date = cursor.getLong(cursor.getColumnIndex(Contract.COL_DATE));
+        String itemDate = df.format(new Date(date));
         TextView dateView = (TextView) view.findViewById(R.id.item_date);
         dateView.setText(itemDate);
 

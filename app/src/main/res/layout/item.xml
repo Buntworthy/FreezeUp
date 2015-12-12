@@ -4,6 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:id="@+id/item_category" />
+
     <ImageView
         android:id="@+id/item_image"
         android:layout_width="wrap_content"
@@ -37,5 +42,7 @@
         android:padding="10dp"
         android:textAppearance="?android:textAppearanceLarge"
         android:gravity="center"/>
+
+
 
 </LinearLayout>

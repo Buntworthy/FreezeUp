@@ -26,4 +26,12 @@ public class Contract implements BaseColumns {
     public static final String COL_IMAGE = "image";
     public static final String COL_CATEGORY = "category";
 
+    // Categories
+    public static final int CATEGORY_DEFAULT = 0;
+    public static final int CATEGORY_MEAL = 1;
+    public static final int CATEGORY_INGREDIENT = 2;
+    public static final int CATEGORY_SIDE = 3;
+    public static final int CATEGORY_SWEET = 4;
+    public static final int CATEGORY_OTHER = 5;
+
 }

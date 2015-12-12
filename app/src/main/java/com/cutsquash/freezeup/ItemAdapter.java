@@ -2,6 +2,7 @@ package com.cutsquash.freezeup;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import java.util.Date;
  * Created by Justin on 28/11/2015.
  */
 public class ItemAdapter extends CursorAdapter {
+
+    public static final String TAG = ItemAdapter.class.getSimpleName();
 
     public ItemAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
@@ -66,6 +69,31 @@ public class ItemAdapter extends CursorAdapter {
         String itemQantity = Integer.toString(cursor.getInt(cursor.getColumnIndex(Contract.COL_QUANTITY)));
         TextView quantityView = (TextView) view.findViewById(R.id.item_quantity);
         quantityView.setText(itemQantity);
+
+        int itemCategory = cursor.getInt(cursor.getColumnIndex(Contract.COL_CATEGORY));
+        View categoryView = view.findViewById(R.id.item_category);
+        switch (itemCategory) {
+            case Contract.CATEGORY_DEFAULT:
+                categoryView.setBackgroundColor(Color.BLUE);
+                break;
+            case Contract.CATEGORY_MEAL:
+                categoryView.setBackgroundColor(Color.RED);
+                break;
+            case Contract.CATEGORY_INGREDIENT:
+                categoryView.setBackgroundColor(Color.GREEN);
+                break;
+            case Contract.CATEGORY_SIDE:
+                categoryView.setBackgroundColor(Color.MAGENTA);
+                break;
+            case Contract.CATEGORY_SWEET:
+                categoryView.setBackgroundColor(Color.CYAN);
+                break;
+            case Contract.CATEGORY_OTHER:
+                categoryView.setBackgroundColor(Color.GRAY);
+                break;
+            default:
+                Log.e(TAG, "Unrecognised category");
+        }
 
 
     }

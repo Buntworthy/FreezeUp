@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.data.Contract;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
@@ -100,11 +100,11 @@ public class DetailActivityFragment extends Fragment
                 mItem.getImagePath());
         if (imageFile.exists()) {
             Log.d(TAG, "Loaading existing image");
-            Picasso.with(getActivity()).load(imageFile).resize(200, 200)
+            Glide.with(this).load(imageFile)
                     .centerCrop().into(imageView);
         } else {
             Log.d(TAG, "No existing image");
-            Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
+            Glide.with(this).load(R.drawable.placeholder)
                     .centerCrop().into(imageView);
         }
 

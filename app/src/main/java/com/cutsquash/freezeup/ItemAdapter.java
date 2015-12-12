@@ -12,8 +12,8 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.data.Contract;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -59,10 +59,10 @@ public class ItemAdapter extends CursorAdapter {
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 itemImage);
         if (imageFile.exists()) {
-            Picasso.with(context).load(imageFile).resize(200, 200)
+            Glide.with(context).load(imageFile).override(200, 200)
                     .centerCrop().into(imageView);
         } else {
-            Picasso.with(context).load(R.drawable.placeholder).resize(200, 200)
+            Glide.with(context).load(R.drawable.placeholder).override(200, 200)
                     .centerCrop().into(imageView);
         }
 

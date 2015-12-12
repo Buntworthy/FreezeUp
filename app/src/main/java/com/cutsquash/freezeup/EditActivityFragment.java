@@ -20,8 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
+import com.bumptech.glide.Glide;
 import java.io.File;
 import java.util.zip.Inflater;
 
@@ -87,8 +86,8 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
                 // TODO move to helper function
                 ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
                 // Load image with picasso (invalidate to avoid chacheing problems)
-                Picasso.with(getActivity()).invalidate(mfileUri);
-                Picasso.with(getActivity()).load(mfileUri).resize(200, 200)
+                //Glide.with(this).invalidate(mfileUri);
+                Glide.with(this).load(mfileUri).override(200, 200)
                         .centerCrop().into(imageView);
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -176,11 +175,11 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
                 mItem.getImagePath());
         if (imageFile.exists()) {
             Log.d(TAG, "Loading existing image");
-            Picasso.with(getActivity()).load(imageFile).resize(200, 200)
+            Glide.with(this).load(imageFile).override(200, 200)
                     .centerCrop().into(imageView);
         } else {
             Log.d(TAG, "No existing image");
-            Picasso.with(getActivity()).load(R.drawable.placeholder).resize(200, 200)
+            Glide.with(this).load(R.drawable.placeholder).override(200, 200)
                     .centerCrop().into(imageView);
         }
     }

@@ -24,5 +24,6 @@ public class Contract implements BaseColumns {
     public static final String COL_DATE = "date";
     public static final String COL_QUANTITY = "quantity";
     public static final String COL_IMAGE = "image";
+    public static final String COL_CATEGORY = "category";
 
 }

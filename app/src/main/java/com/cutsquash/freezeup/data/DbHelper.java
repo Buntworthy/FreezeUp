@@ -12,7 +12,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String TAG = DbHelper.class.getSimpleName();
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "freezer.db";
 
     public DbHelper(Context context) {
@@ -27,7 +27,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 Contract.COL_ITEM_NAME + " TEXT NOT NULL, " +
                 Contract.COL_DATE + " INTEGER NOT NULL, " +
                 Contract.COL_QUANTITY + " INTEGER NOT NULL, " +
-                Contract.COL_IMAGE + " TEXT NOT NULL );";
+                Contract.COL_IMAGE + " TEXT NOT NULL, " +
+                Contract.COL_CATEGORY + " INTEGER NOT NULL DEFAULT 0 );";
 
         db.execSQL(CREATE_DB);
         Log.d(TAG, CREATE_DB);
@@ -36,6 +37,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //TODO deal with upgrade
+        // Upgrading from version 1 to 2, add new column COL_CATEGORY
+        if (oldVersion == 1 && newVersion == 2) {
+            final String UPGRADE_DB = "ALTER TABLE " + Contract.TABLE_NAME +
+                    " ADD COLUMN " + Contract.COL_CATEGORY +
+                    " INTEGER NOT NULL DEFAULT 0;";
+
+            db.execSQL(UPGRADE_DB);
+        }
     }
 }

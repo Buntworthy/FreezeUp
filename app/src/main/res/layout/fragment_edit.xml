@@ -30,5 +30,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/edit_image" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_category"
+        android:text="@string/edit_category"/>
+
 
 </LinearLayout>

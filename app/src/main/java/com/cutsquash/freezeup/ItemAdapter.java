@@ -59,10 +59,10 @@ public class ItemAdapter extends CursorAdapter {
                 context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 itemImage);
         if (imageFile.exists()) {
-            Glide.with(context).load(imageFile).override(200, 200)
+            Glide.with(context).load(imageFile)
                     .centerCrop().into(imageView);
         } else {
-            Glide.with(context).load(R.drawable.placeholder).override(200, 200)
+            Glide.with(context).load(R.drawable.placeholder)
                     .centerCrop().into(imageView);
         }
 
@@ -93,6 +93,7 @@ public class ItemAdapter extends CursorAdapter {
                 break;
             default:
                 Log.e(TAG, "Unrecognised category");
+                break;
         }
 
 

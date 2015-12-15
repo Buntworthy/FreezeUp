@@ -12,4 +12,15 @@
     <string name="enter_name">Item name</string>
     <string name="enter_date">Date added</string>
     <string name="enter_quantity">Quantity</string>
+
+    <!-- Edit fragment -->
+    <string name="edit_category">Select category</string>
+
+    <!-- Category strings -->
+    <string name="category_default">No category</string>
+    <string name="category_meal">Meal</string>
+    <string name="category_ingredient">Ingredient</string>
+    <string name="category_side">Side</string>
+    <string name="category_sweet">Sweet</string>
+    <string name="category_other">Other</string>
 </resources>

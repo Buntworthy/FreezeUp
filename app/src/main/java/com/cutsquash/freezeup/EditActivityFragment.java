@@ -1,13 +1,16 @@
 package com.cutsquash.freezeup;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Dialog;
+import android.support.v4.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,12 +18,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cutsquash.freezeup.data.Contract;
+
 import java.io.File;
 import java.util.zip.Inflater;
 
@@ -44,6 +50,8 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
+
+        // Image click listener
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +77,16 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
 
                 // start the image capture Intent
                 startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            }
+        });
+
+        // Category click listener
+        TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
+        categoryView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialog = new CategoryDialog();
+                dialog.show(getFragmentManager(), "category");
             }
         });
 
@@ -168,8 +186,36 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
         quantityView.setText(item.getQuantityString());
 
-        ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
+        TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
+        // TODO Utility method
+        int category = item.getCategory();
+        String categoryText = null;
+        switch (category) {
+            case Contract.CATEGORY_DEFAULT:
+                categoryText = getString(R.string.category_default);
+                break;
+            case Contract.CATEGORY_INGREDIENT:
+                categoryText = getString(R.string.category_ingredient);
+                break;
+            case Contract.CATEGORY_MEAL:
+                categoryText = getString(R.string.category_meal);
+                break;
+            case Contract.CATEGORY_SIDE:
+                categoryText = getString(R.string.category_side);
+                break;
+            case Contract.CATEGORY_SWEET:
+                categoryText = getString(R.string.category_sweet);
+                break;
+            case Contract.CATEGORY_OTHER:
+                categoryText = getString(R.string.category_other);
+                break;
+            default:
+                Log.e(TAG, "Unrecognised category");
+                break;
+        }
+        categoryView.setText(categoryText);
 
+        ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
         File imageFile = new File(
                 getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 mItem.getImagePath());
@@ -196,5 +242,36 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
         mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
 
+    }
+
+    // Inner classes ///////////////////////////////////////////////////////////////////////////////
+    private class CategoryDialog extends DialogFragment {
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                    getContext(),
+                    R.layout.dialog_category_item);
+            arrayAdapter.add("Testing 1");
+            arrayAdapter.add("Testing 2");
+            arrayAdapter.add("Testing 3");
+            arrayAdapter.add("Testing 4");
+            arrayAdapter.add("Testing 5");
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d(TAG, "Clicked!" + Integer.toString(which));
+                }
+            });
+
+            builder.setTitle("Select category");
+
+            return builder.create();
+        }
     }
 }

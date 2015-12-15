@@ -37,7 +37,8 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     private String mName = "test";
     private long mDate = 1324354;
     private int mQuantity = 1;
-    public String mImagePath = "Dummy";
+    private String mImagePath = "Dummy";
+    private int mCategory = 0;
 
     public boolean shouldSave = false;
     public boolean imageChanged = false;
@@ -65,6 +66,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
             mDate = System.currentTimeMillis();
             mQuantity = 0;
             mItemViewer.updateFields(this);
+            mCategory = 0;
         }
     }
 
@@ -88,6 +90,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
                 values.put(Contract.COL_ITEM_NAME, mName);
                 values.put(Contract.COL_DATE, mDate);
                 values.put(Contract.COL_QUANTITY, mQuantity);
+                values.put(Contract.COL_CATEGORY, mCategory);
 
                 // Add the image path if it exists.
                 String imageString = "dummy";
@@ -128,6 +131,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
                 values.put(Contract.COL_ITEM_NAME, mName);
                 values.put(Contract.COL_DATE, mDate);
                 values.put(Contract.COL_QUANTITY, mQuantity);
+                values.put(Contract.COL_CATEGORY, mCategory);
 
                 // If the image has changed:
                 String imageString = mImagePath;
@@ -195,6 +199,8 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public String getImagePath() {return mImagePath; }
 
+    public int getCategory() {return mCategory; }
+
     // Setters /////
     public void setName(String mName) {
         this.mName = mName;
@@ -207,6 +213,8 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     public void setQuantity(int mQuantity) {
         this.mQuantity = mQuantity;
     }
+
+    public void setCategory(int mCategory) { this.mCategory = mCategory; }
 
 
     // Loader callbacks ////////////////////////////////////////////////////////////////////////////
@@ -225,6 +233,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
             mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
             mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));
             mImagePath = data.getString(data.getColumnIndex(Contract.COL_IMAGE));
+            mCategory = data.getInt(data.getColumnIndex(Contract.COL_CATEGORY));
         } else {
             Log.e(TAG, "No values from cursor");
         }

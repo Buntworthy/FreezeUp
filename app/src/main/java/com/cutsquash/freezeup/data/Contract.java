@@ -3,6 +3,8 @@ package com.cutsquash.freezeup.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.cutsquash.freezeup.R;
+
 /**
  * Created by Justin on 26/11/2015.
  */

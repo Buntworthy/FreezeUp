@@ -28,9 +28,11 @@ import java.io.File;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class EditActivityFragment extends Fragment implements ItemViewer {
+public class EditActivityFragment extends Fragment
+        implements ItemViewer, CategoryDialog.CategoryDialogListener {
 
     public static final String TAG = EditActivityFragment.class.getSimpleName();
+
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     public static final String TEMP_IMAGE_FILE = "temp_image.jpg";
 
@@ -80,7 +82,8 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         categoryView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment dialog = new CategoryDialog();
+                CategoryDialog dialog = new CategoryDialog();
+                dialog.setListener(EditActivityFragment.this);
                 dialog.show(getFragmentManager(), "category");
             }
         });
@@ -166,8 +169,8 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         super.onStop();
     }
 
-    // Item View interface /////////////////////////////////////////////////////////////////////////
-
+    // Interface methods ///////////////////////////////////////////////////////////////////////////
+    // Item Viewer interface ///////////////////////////////////////////////////////////////////////
     @Override
     public void updateFields(Item item) {
         View rootView = getView();
@@ -184,31 +187,9 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
         // TODO Utility method
         int category = item.getCategory();
-        String categoryText = null;
-        switch (category) {
-            case Contract.CATEGORY_DEFAULT:
-                categoryText = getString(R.string.category_default);
-                break;
-            case Contract.CATEGORY_INGREDIENT:
-                categoryText = getString(R.string.category_ingredient);
-                break;
-            case Contract.CATEGORY_MEAL:
-                categoryText = getString(R.string.category_meal);
-                break;
-            case Contract.CATEGORY_SIDE:
-                categoryText = getString(R.string.category_side);
-                break;
-            case Contract.CATEGORY_SWEET:
-                categoryText = getString(R.string.category_sweet);
-                break;
-            case Contract.CATEGORY_OTHER:
-                categoryText = getString(R.string.category_other);
-                break;
-            default:
-                Log.e(TAG, "Unrecognised category");
-                break;
-        }
-        categoryView.setText(categoryText);
+        String[] categoryNames = getResources().getStringArray(R.array.category_strings);
+
+        categoryView.setText(categoryNames[category]);
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
         File imageFile = new File(
@@ -223,6 +204,13 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
             Glide.with(this).load(R.drawable.placeholder).override(200, 200)
                     .centerCrop().into(imageView);
         }
+    }
+
+    // Category dialog listener interface //////////////////////////////////////////////////////////
+    @Override
+    public void categorySelected(int category) {
+        mItem.setCategory(category);
+
     }
 
     // Utility functions ///////////////////////////////////////////////////////////////////////////

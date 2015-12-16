@@ -210,6 +210,8 @@ public class EditActivityFragment extends Fragment
     @Override
     public void categorySelected(int category) {
         mItem.setCategory(category);
+        // Make sure the category field is updated
+        updateFields(mItem);
 
     }
 

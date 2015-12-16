@@ -1,16 +1,13 @@
 package com.cutsquash.freezeup;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.support.v4.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,17 +15,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.data.Contract;
+import com.cutsquash.freezeup.dialogs.CategoryDialog;
 
 import java.io.File;
-import java.util.zip.Inflater;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -242,36 +237,5 @@ public class EditActivityFragment extends Fragment implements ItemViewer {
         EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
         mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
 
-    }
-
-    // Inner classes ///////////////////////////////////////////////////////////////////////////////
-    private class CategoryDialog extends DialogFragment {
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            // Get the layout inflater
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                    getContext(),
-                    R.layout.dialog_category_item);
-            arrayAdapter.add("Testing 1");
-            arrayAdapter.add("Testing 2");
-            arrayAdapter.add("Testing 3");
-            arrayAdapter.add("Testing 4");
-            arrayAdapter.add("Testing 5");
-
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            builder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d(TAG, "Clicked!" + Integer.toString(which));
-                }
-            });
-
-            builder.setTitle("Select category");
-
-            return builder.create();
-        }
     }
 }

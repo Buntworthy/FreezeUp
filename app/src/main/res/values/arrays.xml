@@ -9,4 +9,21 @@
         <item>Sweet</item>
         <item>Other</item>
     </string-array>
+
+    <!-- Sort order prefrence-->
+    <string-array name="pref_sortOrder_entries">
+        <item>Alphabetical (A-Z)</item>
+        <item>Alphabetical (Z-A)</item>
+        <item>Date added (Newest first)</item>
+        <item>Date added (Oldest first)</item>
+    </string-array>
+
+    <string-array name="pref_sortOrder_values">
+        <item>No category</item>
+        <item>Meal</item>
+        <item>Ingredient</item>
+        <item>Side</item>
+        <item>Sweet</item>
+        <item>Other</item>
+    </string-array>
 </resources>

@@ -18,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment, new MainActivityFragment())
+                .addToBackStack(null).commit();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -49,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment, new SettingsFragment())
+                    .addToBackStack(null).commit();
         }
 
         return super.onOptionsItemSelected(item);

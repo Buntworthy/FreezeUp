@@ -1,13 +1,16 @@
 <resources>
     <string name="app_name">FreezeUp</string>
 
+    <!-- Action buttons-->
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
 
+    <!-- Activity titles -->
     <string name="title_activity_edit">Edit</string>
     <string name="title_activity_detail">Item detail</string>
+    <string name="title_activity_settings">Delete</string>
 
     <string name="enter_name">Item name</string>
     <string name="enter_date">Date added</string>
@@ -16,5 +19,11 @@
     <!-- Edit fragment -->
     <string name="edit_category">Select category</string>
 
+    <!-- Preferences -->
+    <string name="pref_sortOrder">Sort order</string>
+    <string name="pref_sorOrderDialog">Select sort order</string>
+    <string name="pref_sortOrder_default">Item name</string>
+
+    <string name="pref_group">Group by category</string>
 
 </resources>

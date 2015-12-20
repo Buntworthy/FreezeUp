@@ -1,7 +1,6 @@
 package com.cutsquash.freezeup;
 
 import android.app.Activity;
-import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -20,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cutsquash.freezeup.data.Contract;
 import com.cutsquash.freezeup.dialogs.CategoryDialog;
 
 import java.io.File;

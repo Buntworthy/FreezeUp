@@ -93,6 +93,12 @@ public class DetailActivityFragment extends Fragment
         TextView quantityView = (TextView) rootView.findViewById(R.id.detail_quantity);
         quantityView.setText(item.getQuantityString());
 
+        TextView categoryView = (TextView) rootView.findViewById(R.id.detail_category);
+        // TODO Utility method
+        int category = item.getCategory();
+        String[] categoryNames = getResources().getStringArray(R.array.category_strings);
+        categoryView.setText(categoryNames[category]);
+
         ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_image);
 
         File imageFile = new File(

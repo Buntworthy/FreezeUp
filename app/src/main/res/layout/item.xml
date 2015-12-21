@@ -9,11 +9,20 @@
         android:layout_height="match_parent"
         android:id="@+id/item_category" />
 
-    <ImageView
-        android:id="@+id/item_image"
+    <FrameLayout
         android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:padding="5dp"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,7 +35,7 @@
             android:id="@+id/item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceLarge"/>
+            android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
             android:id="@+id/item_date"
@@ -40,8 +49,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:textAppearance="?android:textAppearanceLarge"
-        android:gravity="center"/>
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center"
+        android:layout_gravity="center"/>
 
 
 

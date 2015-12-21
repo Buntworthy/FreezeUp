@@ -19,6 +19,9 @@ import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
 /**
  * Created by Justin on 28/11/2015.
  */
@@ -60,10 +63,12 @@ public class ItemAdapter extends CursorAdapter {
                 itemImage);
         if (imageFile.exists()) {
             Glide.with(context).load(imageFile)
-                    .centerCrop().into(imageView);
+                    .centerCrop().bitmapTransform(new CropCircleTransformation(context))
+                    .into(imageView);
         } else {
             Glide.with(context).load(R.drawable.placeholder)
-                    .centerCrop().into(imageView);
+                    .centerCrop().bitmapTransform(new CropCircleTransformation(context))
+                    .into(imageView);
         }
 
         String itemQantity = Integer.toString(cursor.getInt(cursor.getColumnIndex(Contract.COL_QUANTITY)));

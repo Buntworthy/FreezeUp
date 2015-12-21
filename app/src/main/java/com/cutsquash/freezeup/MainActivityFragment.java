@@ -2,12 +2,14 @@ package com.cutsquash.freezeup;
 
 import android.content.ContentUris;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,9 +78,20 @@ public class MainActivityFragment extends Fragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String sortOrder = "";
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean group = sharedPref.getBoolean(getString(R.string.pref_group), true);
+
+        if (group) {
+            sortOrder = Contract.COL_CATEGORY + " DESC, ";
+        }
+        sortOrder += sharedPref.getString(getString(R.string.pref_sortOrder), "name ASC");
+        Log.d(TAG, sortOrder);
+
         return new CursorLoader(getActivity(),
                 Contract.CONTENT_URI,
-                null, null, null, null);
+                null, null, null, sortOrder);
     }
 
     @Override

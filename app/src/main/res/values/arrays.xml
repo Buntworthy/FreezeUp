@@ -19,11 +19,9 @@
     </string-array>
 
     <string-array name="pref_sortOrder_values">
-        <item>No category</item>
-        <item>Meal</item>
-        <item>Ingredient</item>
-        <item>Side</item>
-        <item>Sweet</item>
-        <item>Other</item>
+        <item>name ASC</item>
+        <item>name DESC</item>
+        <item>date DESC</item>
+        <item>date ASC</item>
     </string-array>
 </resources>

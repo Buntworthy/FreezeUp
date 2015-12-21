@@ -2,16 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="pref_sortOrder"
-        android:title="@string/pref_sortOrder"
+        android:key="@string/pref_sortOrder"
+        android:title="@string/pref_sortOrderTitle"
         android:dialogTitle="@string/pref_sorOrderDialog"
         android:entries="@array/pref_sortOrder_entries"
         android:entryValues="@array/pref_sortOrder_values"
         android:defaultValue="@string/pref_sortOrder_default" />
 
     <CheckBoxPreference
-        android:key="pref_group"
-        android:title="@string/pref_group"
+        android:key="@string/pref_group"
+        android:title="@string/pref_groupTitle"
         android:defaultValue="true" />
 
 </PreferenceScreen>

@@ -54,10 +54,8 @@ public class ItemProvider extends ContentProvider {
 
             case ALL_ITEMS:
 
-                String sortString = Contract.COL_CATEGORY + " DESC, "
-                        + Contract.COL_DATE + " DESC";
                 cursor = db.query(Contract.TABLE_NAME,
-                            null, null, null, null, null, sortString);
+                            null, null, null, null, null, sortOrder);
                 break;
 
             // If the incoming URI was for a single row

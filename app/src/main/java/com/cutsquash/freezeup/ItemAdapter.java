@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +45,8 @@ public class ItemAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
+        final int itemId = cursor.getInt(cursor.getColumnIndex(Contract._ID));
+
         String itemName = cursor.getString(cursor.getColumnIndex(Contract.COL_ITEM_NAME));
         TextView nameView = (TextView) view.findViewById(R.id.item_name);
         nameView.setText(itemName);
@@ -72,8 +75,14 @@ public class ItemAdapter extends CursorAdapter {
         }
 
         String itemQantity = Integer.toString(cursor.getInt(cursor.getColumnIndex(Contract.COL_QUANTITY)));
-        TextView quantityView = (TextView) view.findViewById(R.id.item_quantity);
+        Button quantityView = (Button) view.findViewById(R.id.item_quantity);
         quantityView.setText(itemQantity);
+        quantityView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Clicked!" + Integer.toString(itemId));
+            }
+        });
 
         int itemCategory = cursor.getInt(cursor.getColumnIndex(Contract.COL_CATEGORY));
         View categoryView = view.findViewById(R.id.item_category);

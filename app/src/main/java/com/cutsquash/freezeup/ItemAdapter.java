@@ -1,8 +1,11 @@
 package com.cutsquash.freezeup;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,9 +46,9 @@ public class ItemAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
 
-        final int itemId = cursor.getInt(cursor.getColumnIndex(Contract._ID));
+        final long itemId = cursor.getLong(cursor.getColumnIndex(Contract._ID));
 
         String itemName = cursor.getString(cursor.getColumnIndex(Contract.COL_ITEM_NAME));
         TextView nameView = (TextView) view.findViewById(R.id.item_name);
@@ -80,7 +83,29 @@ public class ItemAdapter extends CursorAdapter {
         quantityView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Clicked!" + Integer.toString(itemId));
+                Log.d(TAG, "Clicked!" + Long.toString(itemId));
+                // Get the current quantity value
+                Uri thisUri = ContentUris.withAppendedId(Contract.CONTENT_URI, itemId);
+                Cursor c = context.getContentResolver()
+                        .query(thisUri,
+                                new String[]{Contract.COL_QUANTITY},
+                                null, null, null, null);
+                c.moveToFirst();
+                int originalQuantity = c.getInt(c.getColumnIndex(Contract.COL_QUANTITY));
+                if (originalQuantity > 1){
+                    // If >1 remaining update values
+                    int newQuantity = originalQuantity - 1;
+                    ContentValues values = new ContentValues();
+                    values.put(Contract.COL_QUANTITY, newQuantity);
+                    int updatedRows = context.getContentResolver().update(thisUri, values, null, null);
+                    Log.d(TAG, "Updated " + Integer.toString(updatedRows));
+                } else {
+                    // If 1 remaining, ask to delete
+                    // TODO show confirmation dialog
+                    int updatedRows = context.getContentResolver().delete(thisUri, null, null);
+                    Log.d(TAG, "Deleted " + Integer.toString(updatedRows));
+
+                }
             }
         });
 

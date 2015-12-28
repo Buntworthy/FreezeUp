@@ -53,7 +53,6 @@ public class ItemProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             case ALL_ITEMS:
-
                 cursor = db.query(Contract.TABLE_NAME,
                             null, null, null, null, null, sortOrder);
                 break;
@@ -61,14 +60,14 @@ public class ItemProvider extends ContentProvider {
             // If the incoming URI was for a single row
             case SINGLE_ITEM:
                 // Get the id and use it as the selection
-                cursor = db.query(Contract.TABLE_NAME, null,
+                cursor = db.query(Contract.TABLE_NAME, projection,
                         Contract._ID + "= ?", new String[]{uri.getLastPathSegment()}, null, null, null);
                 break;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -96,6 +95,7 @@ public class ItemProvider extends ContentProvider {
         int numRows = db.delete(Contract.TABLE_NAME,
                 Contract._ID + "= ?",
                 new String[]{uri.getLastPathSegment()});
+        getContext().getContentResolver().notifyChange(uri, null);
 
         return numRows;
     }
@@ -107,6 +107,7 @@ public class ItemProvider extends ContentProvider {
                 values,
                 Contract._ID + "= ?",
                 new String[]{uri.getLastPathSegment()});
+        getContext().getContentResolver().notifyChange(uri, null);
 
         return rowId;
     }

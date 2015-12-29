@@ -1,11 +1,8 @@
 package com.cutsquash.freezeup;
 
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.cutsquash.freezeup.utils.DecrementListener;
 import com.cutsquash.freezeup.data.Contract;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
@@ -80,34 +77,7 @@ public class ItemAdapter extends CursorAdapter {
         String itemQantity = Integer.toString(cursor.getInt(cursor.getColumnIndex(Contract.COL_QUANTITY)));
         Button quantityView = (Button) view.findViewById(R.id.item_quantity);
         quantityView.setText(itemQantity);
-        quantityView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked!" + Long.toString(itemId));
-                // Get the current quantity value
-                Uri thisUri = ContentUris.withAppendedId(Contract.CONTENT_URI, itemId);
-                Cursor c = context.getContentResolver()
-                        .query(thisUri,
-                                new String[]{Contract.COL_QUANTITY},
-                                null, null, null, null);
-                c.moveToFirst();
-                int originalQuantity = c.getInt(c.getColumnIndex(Contract.COL_QUANTITY));
-                if (originalQuantity > 1){
-                    // If >1 remaining update values
-                    int newQuantity = originalQuantity - 1;
-                    ContentValues values = new ContentValues();
-                    values.put(Contract.COL_QUANTITY, newQuantity);
-                    int updatedRows = context.getContentResolver().update(thisUri, values, null, null);
-                    Log.d(TAG, "Updated " + Integer.toString(updatedRows));
-                } else {
-                    // If 1 remaining, ask to delete
-                    // TODO show confirmation dialog
-                    int updatedRows = context.getContentResolver().delete(thisUri, null, null);
-                    Log.d(TAG, "Deleted " + Integer.toString(updatedRows));
-
-                }
-            }
-        });
+        quantityView.setOnClickListener(new DecrementListener(context, itemId));
 
         int itemCategory = cursor.getInt(cursor.getColumnIndex(Contract.COL_CATEGORY));
         View categoryView = view.findViewById(R.id.item_category);

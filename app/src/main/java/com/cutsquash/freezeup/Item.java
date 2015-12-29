@@ -14,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.cutsquash.freezeup.data.Contract;
+import com.cutsquash.freezeup.utils.Utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * Class to represent item data and save state
@@ -195,7 +198,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     public String getDateString() {
-        return Long.toString(mDate);
+        return Utilities.formatDate(mDate);
     }
 
     public String getImagePath() { return mImagePath; }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.utils.DecrementListener;
 import com.cutsquash.freezeup.data.Contract;
+import com.cutsquash.freezeup.utils.Utilities;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -51,10 +52,8 @@ public class ItemAdapter extends CursorAdapter {
         TextView nameView = (TextView) view.findViewById(R.id.item_name);
         nameView.setText(itemName);
 
-        DateFormat df = DateFormat.getDateInstance();
-
         Long date = cursor.getLong(cursor.getColumnIndex(Contract.COL_DATE));
-        String itemDate = df.format(new Date(date));
+        String itemDate = Utilities.formatDate(date);
         TextView dateView = (TextView) view.findViewById(R.id.item_date);
         dateView.setText(itemDate);
 

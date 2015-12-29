@@ -12,11 +12,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.data.Contract;
+import com.cutsquash.freezeup.utils.DecrementListener;
 
 import java.io.File;
 
@@ -113,6 +115,10 @@ public class DetailActivityFragment extends Fragment
             Glide.with(this).load(R.drawable.placeholder)
                     .centerCrop().into(imageView);
         }
+
+        Button decrementButton = (Button) rootView.findViewById(R.id.detail_quantity_button);
+        decrementButton.setOnClickListener(new DecrementListener(getContext(), item.getId()));
+        decrementButton.setText(item.getQuantityString());
 
     }
 }

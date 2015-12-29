@@ -37,5 +37,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/detail_category" />
 
+    <Button
+        android:id="@+id/detail_quantity_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:focusable="false"/>
+
 
 </LinearLayout>

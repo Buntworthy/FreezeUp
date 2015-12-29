@@ -34,6 +34,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     private ItemViewer mItemViewer;
     private Fragment mFragment;
     private Uri mUri;
+    private Long mId;
     private String mName = "test";
     private long mDate = 1324354;
     private int mQuantity = 1;
@@ -197,9 +198,11 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         return Long.toString(mDate);
     }
 
-    public String getImagePath() {return mImagePath; }
+    public String getImagePath() { return mImagePath; }
 
-    public int getCategory() {return mCategory; }
+    public int getCategory() { return mCategory; }
+
+    public long getId() { return mId; }
 
     // Setters /////
     public void setName(String mName) {
@@ -229,6 +232,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
         if (data.moveToFirst()) {
+            mId = data.getLong(data.getColumnIndex(Contract._ID));
             mName = data.getString(data.getColumnIndex(Contract.COL_ITEM_NAME));
             mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
             mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));

@@ -10,6 +10,12 @@
         <item>Other</item>
     </string-array>
 
+    <!-- Image picker strings -->
+    <string-array name="image_picker_string">
+        <item>Camera</item>
+        <item>Gallery</item>
+    </string-array>
+
     <!-- Sort order prefrence-->
     <string-array name="pref_sortOrder_entries">
         <item>Alphabetical (A-Z)</item>

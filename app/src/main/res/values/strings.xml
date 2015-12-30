@@ -33,4 +33,7 @@
     <string name="delete_confirm">Confirm</string>
     <string name="delete_cancel">Cancel</string>
 
+    <!-- Image picker dialog -->
+    <string name="imagePicker_title">Select image source:</string>
+
 </resources>

@@ -24,14 +24,13 @@ public class ImagePickerDialog extends DialogFragment {
         void imagePickerSelected(int choice);
     }
 
-    private final String[] testArray = new String[] {"Camera", "Gallery"};
     private ImagePickerListener mImagePickerListener = null;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("testing")
-                .setItems(testArray, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.imagePicker_title)
+                .setItems(R.array.image_picker_string, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item

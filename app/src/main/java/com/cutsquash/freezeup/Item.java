@@ -32,10 +32,15 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = Item.class.getSimpleName();
 
+    public interface ItemDeletedListener {
+        void itemDeleted();
+    }
+
     private static final int EDIT_ITEM_LOADER = 1;
 
     private ItemViewer mItemViewer;
     private Fragment mFragment;
+    private ItemDeletedListener mDeletedListener = null;
     private Uri mUri;
     private Long mId;
     private String mName = "test";
@@ -222,6 +227,8 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public void setCategory(int mCategory) { this.mCategory = mCategory; }
 
+    public void setDeletedListener(ItemDeletedListener listener) { this.mDeletedListener = listener; }
+
 
     // Loader callbacks ////////////////////////////////////////////////////////////////////////////
     @Override
@@ -242,7 +249,11 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
             mImagePath = data.getString(data.getColumnIndex(Contract.COL_IMAGE));
             mCategory = data.getInt(data.getColumnIndex(Contract.COL_CATEGORY));
         } else {
-            Log.e(TAG, "No values from cursor");
+            // If we can't move to first then this item has been deleted
+            // If we have a listener, inform it of the deletion
+            if (mDeletedListener != null) {
+                mDeletedListener.itemDeleted();
+            }
         }
 
         // Update the item from the cursor
@@ -252,7 +263,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        Log.d(TAG, "Data changed!");
     }
 
     public void copy(File src, File dst) throws IOException {

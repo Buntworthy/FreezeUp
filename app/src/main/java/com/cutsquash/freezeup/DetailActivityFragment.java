@@ -25,8 +25,10 @@ import java.io.File;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment
-        implements ItemViewer {
+public class DetailActivityFragment
+        extends Fragment
+        implements ItemViewer,
+            Item.ItemDeletedListener{
 
     public static final String TAG = DetailActivityFragment.class.getSimpleName();
 
@@ -75,6 +77,7 @@ public class DetailActivityFragment extends Fragment
             Log.d(TAG, "Existing item present");
             mItem = new Item(this, this, intent.getData());
         }
+        mItem.setDeletedListener(this);
         mItem.loadItem();
 
         super.onActivityCreated(savedInstanceState);
@@ -122,5 +125,11 @@ public class DetailActivityFragment extends Fragment
         );
         decrementButton.setText(item.getQuantityString());
 
+    }
+
+    @Override
+    public void itemDeleted() {
+        Intent postDeleteIntent = new Intent(getActivity(), MainActivity.class);
+        startActivity(postDeleteIntent);
     }
 }

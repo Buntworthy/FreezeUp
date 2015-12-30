@@ -29,15 +29,15 @@ public class DeleteDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Testing")
-                .setPositiveButton("Positive", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_message)
+                .setPositiveButton(R.string.delete_confirm, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mListener.deleteItem();
                     }
                 })
-                .setNegativeButton("Negative", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.delete_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        // User cancelled the dialog, do nothing
                     }
                 });
         // Create the AlertDialog object and return it

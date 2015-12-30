@@ -117,7 +117,9 @@ public class DetailActivityFragment extends Fragment
         }
 
         Button decrementButton = (Button) rootView.findViewById(R.id.detail_quantity_button);
-        decrementButton.setOnClickListener(new DecrementListener(getContext(), item.getId()));
+        decrementButton.setOnClickListener(
+                new DecrementListener(getContext(), getFragmentManager(), item.getId())
+        );
         decrementButton.setText(item.getQuantityString());
 
     }

@@ -5,20 +5,27 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.cutsquash.freezeup.data.Contract;
+import com.cutsquash.freezeup.dialogs.DeleteDialog;
 
 /**
  * Created by Justin on 29/12/2015.
  */
-public class DecrementListener implements View.OnClickListener {
+public class DecrementListener
+        implements
+        View.OnClickListener,
+        DeleteDialog.DeleteDialogListener {
 
     private final Context mContext;
+    private final FragmentManager mFragmentManager;
     private final long itemId;
 
-    public DecrementListener(Context context, long itemId){
+    public DecrementListener(Context context, FragmentManager fragmentManager, long itemId){
         this.mContext = context;
+        this.mFragmentManager = fragmentManager;
         this.itemId = itemId;
     }
 
@@ -39,10 +46,17 @@ public class DecrementListener implements View.OnClickListener {
             int updatedRows = mContext.getContentResolver().update(thisUri, values, null, null);
         } else {
             // If 1 remaining, ask to delete
-            // TODO show confirmation dialog
-            int updatedRows = mContext.getContentResolver().delete(thisUri, null, null);
+            DeleteDialog dialog = new DeleteDialog();
+            dialog.setListener(DecrementListener.this);
+            dialog.show(mFragmentManager, "deleteConfirm");
 
         }
         c.close();
+    }
+
+    @Override
+    public void deleteItem() {
+        Uri thisUri = ContentUris.withAppendedId(Contract.CONTENT_URI, itemId);
+        int updatedRows = mContext.getContentResolver().delete(thisUri, null, null);
     }
 }

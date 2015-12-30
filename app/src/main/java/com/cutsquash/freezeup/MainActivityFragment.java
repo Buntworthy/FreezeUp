@@ -39,7 +39,10 @@ public class MainActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mItemAdapter = new ItemAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        mItemAdapter = new ItemAdapter(this,
+                getActivity(),
+                null,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         ListView listView = (ListView) rootView.findViewById(R.id.list_view);
         listView.setAdapter(mItemAdapter);

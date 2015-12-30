@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +31,12 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class ItemAdapter extends CursorAdapter {
 
     public static final String TAG = ItemAdapter.class.getSimpleName();
+    private Fragment mFragment;
 
-    public ItemAdapter(Context context, Cursor c, int flags) {
+    public ItemAdapter(Fragment fragment, Context context, Cursor c, int flags) {
+
         super(context, c, flags);
+        this.mFragment = fragment;
     }
 
     @Override
@@ -76,7 +80,9 @@ public class ItemAdapter extends CursorAdapter {
         String itemQantity = Integer.toString(cursor.getInt(cursor.getColumnIndex(Contract.COL_QUANTITY)));
         Button quantityView = (Button) view.findViewById(R.id.item_quantity);
         quantityView.setText(itemQantity);
-        quantityView.setOnClickListener(new DecrementListener(context, itemId));
+        quantityView.setOnClickListener(
+                new DecrementListener(context, mFragment.getFragmentManager(), itemId)
+        );
 
         int itemCategory = cursor.getInt(cursor.getColumnIndex(Contract.COL_CATEGORY));
         View categoryView = view.findViewById(R.id.item_category);

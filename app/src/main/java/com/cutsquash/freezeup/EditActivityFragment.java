@@ -2,6 +2,7 @@ package com.cutsquash.freezeup;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -20,18 +21,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.dialogs.CategoryDialog;
+import com.cutsquash.freezeup.dialogs.ImagePickerDialog;
+import com.cutsquash.freezeup.utils.Utilities;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class EditActivityFragment extends Fragment
-        implements ItemViewer, CategoryDialog.CategoryDialogListener {
+        implements ItemViewer,
+        CategoryDialog.CategoryDialogListener,
+        ImagePickerDialog.ImagePickerListener {
 
     public static final String TAG = EditActivityFragment.class.getSimpleName();
 
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+    public static final int PICK_IMAGE_ACTIVITY_REQUEST_CODE = 200;
     public static final String TEMP_IMAGE_FILE = "temp_image.jpg";
 
     private Item mItem;
@@ -51,9 +58,12 @@ public class EditActivityFragment extends Fragment
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // create Intent to take a picture and return control to the calling application
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                ImagePickerDialog dialog = new ImagePickerDialog();
+//                dialog.setImagePickerListener(EditActivityFragment.this);
+//                dialog.show(getFragmentManager(), "ImagePicker");
+                Intent intent = new Intent();
 
+                Log.d(TAG, "Image picker selected");
                 // Save the file to a temporary location in external storage, delete this when we
                 // associate the file with an item
                 File file = new File(
@@ -65,13 +75,13 @@ public class EditActivityFragment extends Fragment
                     Log.d(TAG, "Deleting existing temporary image file");
                     file.delete();
                 }
-
-                // Use a Camera capture intent
                 mfileUri = Uri.fromFile(file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mfileUri);
-
-                // start the image capture Intent
-                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                Log.d(TAG, mfileUri.toString());
+                // create Intent to take a picture and return control to the calling application
+                    intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mfileUri);
+                    // start the image capture Intent
+                    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             }
         });
 
@@ -92,24 +102,26 @@ public class EditActivityFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            Log.d(TAG, "Got a result");
-            if (resultCode == Activity.RESULT_OK) {
-                mItem.imageChanged = true;
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE &&
+            resultCode == Activity.RESULT_OK) {
 
-                // TODO move to helper function
-                ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
-                // Load image with picasso (invalidate to avoid chacheing problems)
-                //Glide.with(this).invalidate(mfileUri);
-                Glide.with(this).load(mfileUri).override(200, 200)
-                        .centerCrop().into(imageView);
+            Log.d(TAG, "Got camera image");
+            mItem.imageChanged = true;
 
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // TODO User cancelled the image capture
-            } else {
-                // Image capture failed
-                Log.e(TAG, "Image capture failed");
-            }
+            Log.d(TAG, mfileUri.toString());
+            // TODO move to helper function
+            ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
+            Glide.with(this).load(mfileUri).override(200, 200)
+                    .centerCrop().into(imageView);
+
+        } else if (requestCode == PICK_IMAGE_ACTIVITY_REQUEST_CODE &&
+                resultCode == Activity.RESULT_OK) {
+
+            Log.d(TAG, "Got gallery image");
+            mItem.imageChanged = true;
+            ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
+            Glide.with(this).load(mfileUri).override(200, 200)
+                    .centerCrop().into(imageView);
         }
     }
 
@@ -224,6 +236,51 @@ public class EditActivityFragment extends Fragment
 
         EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
         mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
+
+    }
+
+    @Override
+    public void imagePickerSelected(int choice) {
+        Intent intent = new Intent();
+
+        Log.d(TAG, "Image picker selected");
+        // Save the file to a temporary location in external storage, delete this when we
+        // associate the file with an item
+        File file = new File(
+                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                TEMP_IMAGE_FILE);
+        mfileUri = Uri.fromFile(file);
+        Log.d(TAG, mfileUri.toString());
+
+        // If there is already a temporary file delete it so we can store a new one
+        if (file.exists()) {
+            Log.d(TAG, "Deleting existing temporary image file");
+            file.delete();
+        }
+
+        switch (choice) {
+            case 0: // Camera
+                // create Intent to take a picture and return control to the calling application
+                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mfileUri);
+                // start the image capture Intent
+                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                break;
+
+            case 1: // Gallery
+                // Show only images, no videos or anything else
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mfileUri);
+                // Always show the chooser (if there are multiple options available)
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                        PICK_IMAGE_ACTIVITY_REQUEST_CODE);
+                break;
+
+            default:
+                Log.e(TAG, "Unregonised image picker choice");
+                break;
+        }
 
     }
 }

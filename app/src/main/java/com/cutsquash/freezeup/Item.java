@@ -116,7 +116,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
                                 mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                                 imageString);
                         try {
-                            copy(src, dst);
+                            Utilities.copy(src, dst);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -155,7 +155,7 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
                                 mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                                 imageString);
                         try {
-                            copy(src, dst);
+                            Utilities.copy(src, dst);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -266,18 +266,6 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         Log.d(TAG, "Data changed!");
     }
 
-    public void copy(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        OutputStream out = new FileOutputStream(dst);
 
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-    }
 
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import com.cutsquash.freezeup.utils.Utilities;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -104,30 +106,19 @@ public class EditActivityFragment extends Fragment
             Log.d(TAG, "Got gallery image");
             mItem.imageChanged = true;
 
-            Uri uri = data.getData();
+            Uri srcUri = data.getData();
+            File outputFile = prepareTemporaryFile();
+            mfileUri = Uri.fromFile(outputFile);
 
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
+            ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
 
-                File file = prepareTemporaryFile();
-                mfileUri = Uri.fromFile(file);
+            BitmapWorkerTask task = new BitmapWorkerTask(srcUri, outputFile, imageView);
+            task.execute();
 
-                FileOutputStream fOut = new FileOutputStream(file);
-
-                bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                fOut.flush();
-                fOut.close();
-
-                ImageView imageView = (ImageView) getView().findViewById(R.id.edit_image);
-                Glide.with(this).load(mfileUri).override(200, 200)
-                        .centerCrop()
-                        .signature(new StringSignature(Long.toString(System.currentTimeMillis())))
-                        .into(imageView);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            Glide.with(this).load(srcUri).override(200, 200)
+                    .centerCrop()
+                    .signature(new StringSignature(Long.toString(System.currentTimeMillis())))
+                    .into(imageView);
         }
     }
 
@@ -294,5 +285,58 @@ public class EditActivityFragment extends Fragment
         return file;
     }
 
+
+    // AsyncTask for processing bitmap from gallery
+    class BitmapWorkerTask extends AsyncTask<Void, Void, Void> {
+        private final WeakReference<ImageView> imageViewReference;
+        private final File outputFile;
+        private final Uri srcUri;
+
+        public BitmapWorkerTask(Uri srcUri, File outputFile, ImageView imageView) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<ImageView>(imageView);
+            this.outputFile = outputFile;
+            this.srcUri = srcUri;
+        }
+
+        // Decode image in background.
+        @Override
+        protected Void doInBackground(Void... params) {
+            Bitmap bitmap = null;
+            try {
+                Log.d(TAG, "getting bitmap");
+                bitmap = MediaStore.Images.Media.getBitmap(
+                        getActivity().getContentResolver(), srcUri);
+                Log.d(TAG, "got bitmap");
+                FileOutputStream fOut = new FileOutputStream(outputFile);
+                // TODO scale the bitmap
+                Log.d(TAG, "Compressing bitmap");
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                Log.d(TAG, "Compressed bitmap");
+                fOut.flush();
+                fOut.close();
+                Log.d(TAG, "All done");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        // Once complete, see if ImageView is still around and set bitmap.
+        @Override
+        protected void onPostExecute(Void param) {
+            if (imageViewReference != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    Glide.with(EditActivityFragment.this).load(outputFile)
+                            .override(200, 200)
+                            .centerCrop()
+                            .signature(new StringSignature(Long.toString(System.currentTimeMillis())))
+                            .into(imageView);
+                }
+            }
+        }
+    }
 
 }

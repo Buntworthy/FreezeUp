@@ -15,7 +15,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="250dp"
             android:id="@+id/detail_image" />
 
         <TextView
@@ -55,7 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:src="@android:drawable/ic_menu_edit"
+        android:src="@drawable/ic_edit_white_24dp"
+        android:tint="@android:color/white"
         app:layout_anchor="@id/detail_image"
         app:layout_anchorGravity="bottom|right|end"/>
 

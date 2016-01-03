@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -20,8 +21,6 @@ import com.cutsquash.freezeup.data.Contract;
 import com.cutsquash.freezeup.utils.Utilities;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.util.Date;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -77,10 +76,12 @@ public class ItemAdapter extends CursorAdapter {
                     .into(imageView);
         }
 
-        String itemQantity = Integer.toString(cursor.getInt(cursor.getColumnIndex(Contract.COL_QUANTITY)));
-        Button quantityView = (Button) view.findViewById(R.id.item_quantity);
+        String itemQantity = Integer.toString(cursor.getInt(
+                cursor.getColumnIndex(Contract.COL_QUANTITY)));
+        TextView quantityView = (TextView) view.findViewById(R.id.item_quantity_text);
         quantityView.setText(itemQantity);
-        quantityView.setOnClickListener(
+        LinearLayout quantityViewButton = (LinearLayout) view.findViewById(R.id.item_quantity_button);
+        quantityViewButton.setOnClickListener(
                 new DecrementListener(context, mFragment.getFragmentManager(), itemId)
         );
 

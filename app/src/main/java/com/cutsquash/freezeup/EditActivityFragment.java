@@ -135,7 +135,6 @@ public class EditActivityFragment extends Fragment
                 mItem.shouldSave = true;
                 getTextFields();
                 // Send the user back to the main activity
-                // TODO should we go back to detail or main?
                 Intent postSaveIntent = new Intent(getActivity(), MainActivity.class);
                 startActivity(postSaveIntent);
                 return true;

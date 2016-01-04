@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,29 +42,20 @@ public class DetailActivityFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        return rootView;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_detail_fragment, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_edit:
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.edit_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EditActivity.class)
                         .setData(mItem.getUri());
                 startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+            }
+        });
+        return rootView;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

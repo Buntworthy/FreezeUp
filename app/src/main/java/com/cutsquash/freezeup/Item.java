@@ -81,6 +81,15 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public void delete() {
         if (mUri != null) {
+            // Delete image file if exists
+            File imageFile = new File(
+                    mFragment.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    mImagePath);
+            if (imageFile.exists()) {
+                imageFile.delete();
+            }
+
+            // Delete from the database
             ContentResolver resolver = mFragment.getActivity().getContentResolver();
             int nRows = resolver.delete(mUri, null, null);
             if (nRows != 1) {

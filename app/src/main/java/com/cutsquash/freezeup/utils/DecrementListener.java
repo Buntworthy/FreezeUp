@@ -40,16 +40,17 @@ public class DecrementListener
         int originalQuantity = c.getInt(c.getColumnIndex(Contract.COL_QUANTITY));
         if (originalQuantity > 1){
             // If >1 remaining update values
-            int newQuantity = originalQuantity - 1;
-            ContentValues values = new ContentValues();
-            values.put(Contract.COL_QUANTITY, newQuantity);
-            int updatedRows = mContext.getContentResolver().update(thisUri, values, null, null);
-        } else {
+            updateQuantity(thisUri, originalQuantity - 1);
+
+        } else if (originalQuantity == 1 || originalQuantity == -1) {
             // If 1 remaining, ask to delete
             DeleteDialog dialog = new DeleteDialog();
             dialog.setListener(DecrementListener.this);
             dialog.show(mFragmentManager, "deleteConfirm");
 
+        } else {
+            // It is a level, (go toward zero by 1)
+            updateQuantity(thisUri, originalQuantity + 1);
         }
         c.close();
     }
@@ -58,5 +59,11 @@ public class DecrementListener
     public void deleteItem() {
         Uri thisUri = ContentUris.withAppendedId(Contract.CONTENT_URI, itemId);
         int updatedRows = mContext.getContentResolver().delete(thisUri, null, null);
+    }
+
+    private int updateQuantity(Uri uri, int newQuantity) {
+        ContentValues values = new ContentValues();
+        values.put(Contract.COL_QUANTITY, newQuantity);
+        return mContext.getContentResolver().update(uri, values, null, null);
     }
 }

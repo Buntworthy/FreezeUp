@@ -33,4 +33,22 @@ public class Utilities {
         in.close();
         out.close();
     }
+
+    public static String quantityToShortString(int quantity) {
+        if (quantity >= 0) {
+            return Integer.toString(quantity);
+        } else {
+            switch (quantity) {
+                case -1:
+                    return "L";
+                case -2:
+                    return "M";
+                case -3:
+                    return "H";
+                default:
+                    return "?";
+            }
+        }
+    }
+
 }

@@ -76,7 +76,7 @@ public class ItemAdapter extends CursorAdapter {
                     .into(imageView);
         }
 
-        String itemQantity = Integer.toString(cursor.getInt(
+        String itemQantity = Utilities.quantityToShortString(cursor.getInt(
                 cursor.getColumnIndex(Contract.COL_QUANTITY)));
         TextView quantityView = (TextView) view.findViewById(R.id.item_quantity_text);
         quantityView.setText(itemQantity);

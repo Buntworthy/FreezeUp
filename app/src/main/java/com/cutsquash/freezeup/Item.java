@@ -208,7 +208,20 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     public String getQuantityString() {
-        return Integer.toString(mQuantity);
+        if (mQuantity >= 0) {
+            return Integer.toString(mQuantity);
+        } else {
+            switch (mQuantity) {
+                case -1:
+                    return "Low";
+                case -2:
+                    return "Medium";
+                case -3:
+                    return "High";
+                default:
+                    return "Unkown";
+            }
+        }
     }
 
     public String getDateString() {

@@ -24,13 +24,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 import com.cutsquash.freezeup.dialogs.CategoryDialog;
+import com.cutsquash.freezeup.dialogs.DateDialog;
 import com.cutsquash.freezeup.dialogs.ImagePickerDialog;
 import com.cutsquash.freezeup.utils.Utilities;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -38,7 +43,8 @@ import java.lang.ref.WeakReference;
 public class EditActivityFragment extends Fragment
         implements ItemViewer,
         CategoryDialog.CategoryDialogListener,
-        ImagePickerDialog.ImagePickerListener {
+        ImagePickerDialog.ImagePickerListener,
+        DateDialog.DateDialogListener {
 
     public static final String TAG = EditActivityFragment.class.getSimpleName();
 
@@ -77,6 +83,17 @@ public class EditActivityFragment extends Fragment
                 CategoryDialog dialog = new CategoryDialog();
                 dialog.setListener(EditActivityFragment.this);
                 dialog.show(getFragmentManager(), "category");
+            }
+        });
+
+        // Date click listener
+        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
+        dateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateDialog dialog = new DateDialog();
+                dialog.setListener(EditActivityFragment.this);
+                dialog.show(getFragmentManager(), "date");
             }
         });
 
@@ -282,6 +299,14 @@ public class EditActivityFragment extends Fragment
         }
 
         return file;
+    }
+
+    @Override
+    public void dateSelected(int year, int month, int day) {
+        GregorianCalendar date = new GregorianCalendar(year, month, day);
+        mItem.setDate(date.getTimeInMillis());
+        // update the UI
+        updateFields(mItem);
     }
 
 

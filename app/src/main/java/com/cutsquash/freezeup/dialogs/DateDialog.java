@@ -17,6 +17,14 @@ import java.util.Calendar;
 public class DateDialog extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
+    // Interface to communicate date selection
+    public interface DateDialogListener {
+        public void dateSelected(int year, int month, int day);
+    }
+
+    // Use this instance of the interface to deliver action events
+    private DateDialogListener mListener;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -30,9 +38,10 @@ public class DateDialog extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        DetailActivityFragment f = (DetailActivityFragment) getActivity()
-                .getSupportFragmentManager()
-                .findFragmentById(R.id.edit_fragment);
+        mListener.dateSelected(year, month, day);
+    }
 
+    public void setListener(DateDialogListener listener) {
+        this.mListener = listener;
     }
 }

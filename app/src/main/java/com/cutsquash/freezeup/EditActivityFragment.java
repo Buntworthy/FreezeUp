@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,7 +44,8 @@ public class EditActivityFragment extends Fragment
         implements ItemViewer,
         CategoryDialog.CategoryDialogListener,
         ImagePickerDialog.ImagePickerListener,
-        DateDialog.DateDialogListener {
+        DateDialog.DateDialogListener,
+        AdapterView.OnItemSelectedListener {
 
     public static final String TAG = EditActivityFragment.class.getSimpleName();
 
@@ -53,6 +55,7 @@ public class EditActivityFragment extends Fragment
 
     private Item mItem;
     private Uri mfileUri;
+    private boolean mLevel = false;
 
     public EditActivityFragment() {
     }
@@ -72,6 +75,7 @@ public class EditActivityFragment extends Fragment
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         // Image click listener
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
@@ -234,8 +238,10 @@ public class EditActivityFragment extends Fragment
         TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
         dateView.setText(item.getDateString());
 
-        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
-        quantityView.setText(item.getQuantityString());
+        if (mLevel == false) {
+            EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
+            quantityView.setText(item.getQuantityString());
+        }
 
         TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
         categoryView.setText(
@@ -268,13 +274,13 @@ public class EditActivityFragment extends Fragment
 
             case R.id.Number:
                 if (checked)
-                    Log.d(TAG, "Number");
+                    mLevel = false;
                     numberView.setVisibility(View.VISIBLE);
                     levelView.setVisibility(View.GONE);
                     break;
             case R.id.Level:
                 if (checked)
-                    Log.d(TAG, "Level");
+                    mLevel = true;
                     numberView.setVisibility(View.GONE);
                     levelView.setVisibility(View.VISIBLE);
                     // Use spinner for level input
@@ -297,11 +303,14 @@ public class EditActivityFragment extends Fragment
         // Get the text from the edit text fields and update the item
         View rootView = getView();
 
+
         EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
         mItem.setName(nameView.getText().toString());
 
-        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
-        mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
+        if (mLevel == false) {
+            EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
+            mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
+        }
 
     }
 
@@ -360,6 +369,17 @@ public class EditActivityFragment extends Fragment
         mItem.setDate(date.getTimeInMillis());
         // update the UI
         updateFields(mItem);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(TAG,Integer.toString(-1 - position));
+        mItem.setQuantity(-1 - position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
 

@@ -1,5 +1,9 @@
 package com.cutsquash.freezeup.utils;
 
+import android.content.res.Resources;
+
+import com.cutsquash.freezeup.R;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,6 +53,11 @@ public class Utilities {
                     return "?";
             }
         }
+    }
+
+    public static String getCategoryString(Resources resources, int category) {
+        String[] categoryNames = resources.getStringArray(R.array.category_strings);
+        return categoryNames[category];
     }
 
 }

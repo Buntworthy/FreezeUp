@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cutsquash.freezeup.data.Contract;
 import com.cutsquash.freezeup.utils.DecrementListener;
+import com.cutsquash.freezeup.utils.Utilities;
 
 import java.io.File;
 
@@ -91,10 +92,9 @@ public class DetailActivityFragment
         quantityView.setText(item.getQuantityString());
 
         TextView categoryView = (TextView) rootView.findViewById(R.id.detail_category);
-        // TODO Utility method
-        int category = item.getCategory();
-        String[] categoryNames = getResources().getStringArray(R.array.category_strings);
-        categoryView.setText(categoryNames[category]);
+        categoryView.setText(
+                Utilities.getCategoryString(getResources(), item.getCategory())
+        );
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_image);
 

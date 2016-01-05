@@ -196,6 +196,7 @@ public class EditActivityFragment extends Fragment
     // Item Viewer interface ///////////////////////////////////////////////////////////////////////
     @Override
     public void updateFields(Item item) {
+        // TODO put in superclass?
         View rootView = getView();
 
         EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
@@ -208,11 +209,9 @@ public class EditActivityFragment extends Fragment
         quantityView.setText(item.getQuantityString());
 
         TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
-        // TODO Utility method
-        int category = item.getCategory();
-        String[] categoryNames = getResources().getStringArray(R.array.category_strings);
-
-        categoryView.setText(categoryNames[category]);
+        categoryView.setText(
+                Utilities.getCategoryString(getResources(), item.getCategory())
+        );
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
         File imageFile = new File(

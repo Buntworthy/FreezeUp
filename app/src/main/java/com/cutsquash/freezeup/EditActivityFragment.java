@@ -2,7 +2,6 @@ package com.cutsquash.freezeup;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,8 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,13 +30,10 @@ import com.cutsquash.freezeup.dialogs.DateDialog;
 import com.cutsquash.freezeup.dialogs.ImagePickerDialog;
 import com.cutsquash.freezeup.utils.Utilities;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -63,6 +62,16 @@ public class EditActivityFragment extends Fragment
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_edit, container, false);
+
+        // Set up spinner
+        Spinner spinner = (Spinner) rootView.findViewById(R.id.edit_quantity_level);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.quantity_level_choices, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
 
         // Image click listener
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
@@ -108,6 +117,20 @@ public class EditActivityFragment extends Fragment
                 Intent postSaveIntent = new Intent(getActivity(), MainActivity.class);
                 startActivity(postSaveIntent);
 
+            }
+        });
+
+        // Quantity type click listener
+        rootView.findViewById(R.id.Number).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRadioButtonClicked(v);
+            }
+        });
+        rootView.findViewById(R.id.Level).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRadioButtonClicked(v);
             }
         });
 
@@ -211,7 +234,7 @@ public class EditActivityFragment extends Fragment
         TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
         dateView.setText(item.getDateString());
 
-        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
+        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
         quantityView.setText(item.getQuantityString());
 
         TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
@@ -234,6 +257,31 @@ public class EditActivityFragment extends Fragment
         }
     }
 
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        View numberView = getView().findViewById(R.id.edit_quantity_number);
+        View levelView = getView().findViewById(R.id.edit_quantity_level);
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+
+            case R.id.Number:
+                if (checked)
+                    Log.d(TAG, "Number");
+                    numberView.setVisibility(View.VISIBLE);
+                    levelView.setVisibility(View.GONE);
+                    break;
+            case R.id.Level:
+                if (checked)
+                    Log.d(TAG, "Level");
+                    numberView.setVisibility(View.GONE);
+                    levelView.setVisibility(View.VISIBLE);
+                    // Use spinner for level input
+                    break;
+        }
+    }
+
     // Category dialog listener interface //////////////////////////////////////////////////////////
     @Override
     public void categorySelected(int category) {
@@ -252,7 +300,7 @@ public class EditActivityFragment extends Fragment
         EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
         mItem.setName(nameView.getText().toString());
 
-        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity);
+        EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
         mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
 
     }

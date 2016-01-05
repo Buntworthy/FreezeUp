@@ -26,11 +26,48 @@
             android:layout_height="wrap_content"
             android:id="@+id/edit_date" />
 
+
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:text="Select quantity type:"
+                android:id="@+id/textView" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Number"
+                android:id="@+id/Number"
+                android:checked="true" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Level"
+                android:id="@+id/Level"/>
+        </RadioGroup>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_quantity"
-            android:inputType="number|numberSigned"/>
+            android:id="@+id/edit_quantity_number"
+            android:inputType="number"
+            android:hint="Input number of items"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit_quantity_level"
+            android:visibility="gone"/>
 
         <ImageView
             android:layout_width="wrap_content"

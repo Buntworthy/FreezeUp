@@ -30,4 +30,11 @@
         <item>date DESC</item>
         <item>date ASC</item>
     </string-array>
+
+    <!-- Quantity level -->
+    <string-array name="quantity_level_choices">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
 </resources>

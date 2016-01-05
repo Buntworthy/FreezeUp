@@ -13,7 +13,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edit_name" />
+        android:id="@+id/edit_name"
+        android:inputType="textCapSentences"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -23,7 +24,8 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edit_quantity" />
+        android:id="@+id/edit_quantity"
+        android:inputType="number|numberSigned"/>
 
     <ImageView
         android:layout_width="wrap_content"

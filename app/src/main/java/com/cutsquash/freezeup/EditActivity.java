@@ -19,14 +19,6 @@ public class EditActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // TODO move the edit fab to the fragment
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "fab pressed");
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

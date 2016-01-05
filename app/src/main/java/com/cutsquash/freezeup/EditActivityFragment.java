@@ -50,7 +50,7 @@ public class EditActivityFragment extends Fragment
 
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     public static final int PICK_IMAGE_ACTIVITY_REQUEST_CODE = 200;
-    public static final String TEMP_IMAGE_FILE = "temp4_image.jpg";
+    public static final String TEMP_IMAGE_FILE = "temp_image.jpg";
 
     private Item mItem;
     private Uri mfileUri;
@@ -94,6 +94,20 @@ public class EditActivityFragment extends Fragment
                 DateDialog dialog = new DateDialog();
                 dialog.setListener(EditActivityFragment.this);
                 dialog.show(getFragmentManager(), "date");
+            }
+        });
+
+        // Save listener
+        rootView.findViewById(R.id.done_fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mItem.shouldSave = true;
+                getTextFields();
+                // Send the user back to the main activity
+                Intent postSaveIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(postSaveIntent);
+
             }
         });
 
@@ -147,14 +161,6 @@ public class EditActivityFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
-            case R.id.action_save:
-                mItem.shouldSave = true;
-                getTextFields();
-                // Send the user back to the main activity
-                Intent postSaveIntent = new Intent(getActivity(), MainActivity.class);
-                startActivity(postSaveIntent);
-                return true;
 
             case R.id.action_delete:
                 // TODO confirmation dialog

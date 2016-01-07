@@ -15,7 +15,10 @@ import com.cutsquash.freezeup.EditActivityFragment;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 
 /**
  * Created by Justin on 07/01/2016.
@@ -37,24 +40,35 @@ public class BitmapWorkerTask extends AsyncTask<Void, Void, Void> {
     // Decode image in background.
     @Override
     protected Void doInBackground(Void... params) {
+        Log.d("BitmapWorkerTask", "Starting...");
         Bitmap bitmap = null;
+        final int chunkSize = 1024;  // We'll read in one kB at a time
+        byte[] imageData = new byte[chunkSize];
+        InputStream in = null;
+        OutputStream out = null;
+
         try {
-            Log.d(EditActivityFragment.TAG, "getting bitmap");
-            bitmap = MediaStore.Images.Media.getBitmap(
-                    fragmentReference.get().getActivity().getContentResolver(), srcUri);
-            Log.d(EditActivityFragment.TAG, "got bitmap");
-            FileOutputStream fOut = new FileOutputStream(outputFile);
-            // TODO scale the bitmap
-            Log.d(EditActivityFragment.TAG, "Compressing bitmap");
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-            Log.d(EditActivityFragment.TAG, "Compressed bitmap");
-            fOut.flush();
-            fOut.close();
-            Log.d(EditActivityFragment.TAG, "All done");
+            in = fragmentReference.get()
+                    .getActivity().getContentResolver()
+                    .openInputStream(srcUri);
+            out = new FileOutputStream(outputFile);
+
+            int bytesRead;
+            while ((bytesRead = in.read(imageData)) > 0) {
+                out.write(Arrays.copyOfRange(imageData, 0, Math.max(0, bytesRead)));
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (in != null) in.close();
+                if (out != null) out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        Log.d("BitmapWorkerTask", "finished");
         return null;
     }
 

@@ -16,28 +16,88 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:id="@+id/detail_image" />
+            android:id="@+id/detail_image"
+            android:src="@drawable/placeholder"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/detail_name"
-            android:textAppearance="?android:textAppearanceLarge" />
+            android:text="Title"
+            android:textIsSelectable="false"
+            android:textSize="34sp"
+            android:background="@android:color/holo_blue_dark"
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:textColor="@android:color/white" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_date" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_quantity" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@android:drawable/ic_dialog_info"
+                android:tint="@android:color/darker_gray"/>
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/detail_date"
+                android:text="Date"
+                android:textSize="16sp"
+                android:paddingLeft="16dp"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_category" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@android:drawable/ic_dialog_info"
+                android:tint="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/detail_quantity"
+                android:text="Quantity"
+                android:textSize="16sp"
+                android:paddingLeft="16dp"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@android:drawable/ic_dialog_info"
+                android:tint="@android:color/darker_gray"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/detail_category"
+                android:text="Category"
+                android:textSize="16sp"
+                android:paddingLeft="16dp"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/detail_quantity_button"

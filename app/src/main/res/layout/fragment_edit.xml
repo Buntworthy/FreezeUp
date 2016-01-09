@@ -15,30 +15,74 @@
         tools:showIn="@layout/activity_edit"
         android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/ic_event_black_24dp"
+            android:tint="@android:color/darker_gray"/>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_name"
-            android:inputType="textCapSentences"/>
+            android:inputType="textCapSentences"
+            android:hint="Name"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical" />
 
-        <TextView
+    </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/edit_date" />
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@drawable/ic_event_black_24dp"
+                android:tint="@android:color/darker_gray"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_date"
+                android:text="Date created"
+                android:textSize="16sp"
+                android:paddingLeft="16dp"
+                android:layout_gravity="center_vertical" />
 
+    </LinearLayout>
+
+        <!-- Quantity type selection-->
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingRight="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:src="@drawable/ic_filter_none_black_24dp"
+                android:tint="@android:color/darker_gray"/>
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="20dp"
-                android:text="Select quantity type:"
-                android:id="@+id/textView" />
+                android:text="Select type:"
+                android:id="@+id/textView"
+                android:textSize="16sp"
+                android:paddingLeft="16dp"
+                android:layout_gravity="center_vertical"/>
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -46,40 +90,121 @@
                 android:layout_weight="0.5"
                 android:text="Number"
                 android:id="@+id/Number"
-                android:checked="true" />
+                android:checked="true"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"/>
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:text="Level"
-                android:id="@+id/Level"/>
+                android:id="@+id/Level"
+                android:textSize="16sp"
+                android:layout_gravity="center_vertical"/>
         </RadioGroup>
 
-        <EditText
-            android:layout_width="match_parent"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/ic_filter_none_black_24dp"
+            android:tint="@android:color/darker_gray"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quantity:"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:id="@+id/edit_quantity_number"
             android:inputType="number"
-            android:hint="Input number of items"/>
+            android:hint="Input number of items"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_quantity_level"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_image" />
+            android:padding="16dp"
+            android:src="@drawable/ic_local_offer_black_24dp"
+            android:tint="@android:color/darker_gray"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_category"
-            android:text="@string/edit_category"/>
+            android:text="@string/edit_category"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@android:drawable/ic_menu_camera"
+            android:tint="@android:color/darker_gray"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:id="@+id/edit_image"
+                android:src="@drawable/placeholder"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edit image"
+                android:textSize="16sp"
+                android:paddingLeft="16dp"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="false"
+                android:layout_alignLeft="@+id/edit_image" />
+
+
+        </RelativeLayout>
+    </LinearLayout>
 
     </LinearLayout>
 

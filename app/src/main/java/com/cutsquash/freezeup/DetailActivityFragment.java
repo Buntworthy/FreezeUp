@@ -1,16 +1,16 @@
 package com.cutsquash.freezeup;
 
-import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cutsquash.freezeup.data.Contract;
 import com.cutsquash.freezeup.utils.DecrementListener;
 import com.cutsquash.freezeup.utils.Utilities;
 
@@ -30,10 +29,11 @@ import java.io.File;
 public class DetailActivityFragment
         extends Fragment
         implements ItemViewer,
-            Item.ItemDeletedListener{
+            Item.ItemDeletedListener,
+            LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String TAG = DetailActivityFragment.class.getSimpleName();
-
+    private static final int DETAIL_ITEM_LOADER = 1;
     private Item mItem;
 
     public DetailActivityFragment() {
@@ -60,26 +60,31 @@ public class DetailActivityFragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         Intent intent = getActivity().getIntent();
         if (intent.getData() == null){
             // We shouldn't view detail without a uri
             Log.e(TAG, "No existing item, adding new");
             mItem = new Item(this, this, null);
+            mItem.loadItem();
         } else {
             Log.d(TAG, "Existing item present");
             mItem = new Item(this, this, intent.getData());
+            getLoaderManager().initLoader(DETAIL_ITEM_LOADER, null, this);
+            // Loader manager will call loadItem()
+            Log.d(TAG, "Made item");
         }
         mItem.setDeletedListener(this);
-        mItem.loadItem();
 
-        super.onActivityCreated(savedInstanceState);
-
+        Log.d(TAG, "Finished onAcitivityCreated");
     }
+
 
     @Override
     public void updateFields(Item item) {
 
+        Log.d(TAG, "updating fields");
         View rootView = getView();
 
         TextView nameView = (TextView) rootView.findViewById(R.id.detail_name);
@@ -116,12 +121,34 @@ public class DetailActivityFragment
                 new DecrementListener(getContext(), getFragmentManager(), item.getId())
         );
         decrementButton.setText(item.getQuantityString());
-
+        Log.d(TAG, "Updated fields");
     }
 
     @Override
     public void itemDeleted() {
         Intent postDeleteIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(postDeleteIntent);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(),
+                mItem.getUri(),
+                null, null, null, null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "Loader finished");
+        mItem.loadItem(data);
+        // Update the item from the cursor
+        updateFields(mItem);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "Data changed!");
     }
 }

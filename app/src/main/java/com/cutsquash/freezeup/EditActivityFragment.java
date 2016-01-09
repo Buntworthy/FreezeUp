@@ -2,11 +2,15 @@ package com.cutsquash.freezeup;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,10 +45,12 @@ public class EditActivityFragment extends Fragment
         CategoryDialog.CategoryDialogListener,
         ImagePickerDialog.ImagePickerListener,
         DateDialog.DateDialogListener,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener,
+        LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String TAG = EditActivityFragment.class.getSimpleName();
 
+    private static final int EDIT_ITEM_LOADER = 2;
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     public static final int PICK_IMAGE_ACTIVITY_REQUEST_CODE = 200;
     public static final String TEMP_IMAGE_FILE = "temp_image.jpg";
@@ -199,19 +205,21 @@ public class EditActivityFragment extends Fragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         Intent intent = getActivity().getIntent();
-        if (intent.getData() == null) {
+        if (intent.getData() == null){
+            // We shouldn't view detail without a uri
             Log.e(TAG, "No existing item, adding new");
             mItem = new Item(this, this, null);
+            mItem.loadItem();
         } else {
             Log.d(TAG, "Existing item present");
             mItem = new Item(this, this, intent.getData());
+            getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
+            // Loader manager will call loadItem()
+            Log.d(TAG, "Made item");
         }
-        mItem.loadItem();
-
-        super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override
@@ -375,6 +383,28 @@ public class EditActivityFragment extends Fragment
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(),
+                mItem.getUri(),
+                null, null, null, null);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "Loader finished");
+        mItem.loadItem(data);
+        // Update the item from the cursor
+        updateFields(mItem);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "Data changed!");
     }
 
 

@@ -28,7 +28,7 @@ import java.util.Date;
 /**
  * Class to represent item data and save state
  */
-public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
+public class Item {
 
     public static final String TAG = Item.class.getSimpleName();
 
@@ -36,7 +36,6 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
         void itemDeleted();
     }
 
-    private static final int EDIT_ITEM_LOADER = 1;
 
     private ItemViewer mItemViewer;
     private Fragment mFragment;
@@ -65,17 +64,31 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public void loadItem() {
 
-        // if the uri is not null, make the call to initialise the object
-        if (mUri != null) {
-            mFragment.getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
+        // if mUri is null we are creating a new item
+        Log.d(TAG, "Creating new item");
+        mName = null;
+        mDate = System.currentTimeMillis();
+        mQuantity = 0;
+        mItemViewer.updateFields(this);
+        mCategory = 0;
+    }
+
+    public void loadItem(Cursor data) {
+
+        if (data.moveToFirst()) {
+            Log.d(TAG, "Setting item data");
+            mId = data.getLong(data.getColumnIndex(Contract._ID));
+            mName = data.getString(data.getColumnIndex(Contract.COL_ITEM_NAME));
+            mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
+            mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));
+            mImagePath = data.getString(data.getColumnIndex(Contract.COL_IMAGE));
+            mCategory = data.getInt(data.getColumnIndex(Contract.COL_CATEGORY));
         } else {
-            // if mUri is null we are creating a new item
-            Log.d(TAG, "Creating new item");
-            mName = null;
-            mDate = System.currentTimeMillis();
-            mQuantity = 0;
-            mItemViewer.updateFields(this);
-            mCategory = 0;
+            // If we can't move to first then this item has been deleted
+            // If we have a listener, inform it of the deletion
+            if (mDeletedListener != null) {
+                mDeletedListener.itemDeleted();
+            }
         }
     }
 
@@ -250,44 +263,6 @@ public class Item implements LoaderManager.LoaderCallbacks<Cursor> {
     public void setCategory(int mCategory) { this.mCategory = mCategory; }
 
     public void setDeletedListener(ItemDeletedListener listener) { this.mDeletedListener = listener; }
-
-
-    // Loader callbacks ////////////////////////////////////////////////////////////////////////////
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mFragment.getContext(),
-                    mUri,
-                    null, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        if (data.moveToFirst()) {
-            mId = data.getLong(data.getColumnIndex(Contract._ID));
-            mName = data.getString(data.getColumnIndex(Contract.COL_ITEM_NAME));
-            mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
-            mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));
-            mImagePath = data.getString(data.getColumnIndex(Contract.COL_IMAGE));
-            mCategory = data.getInt(data.getColumnIndex(Contract.COL_CATEGORY));
-        } else {
-            // If we can't move to first then this item has been deleted
-            // If we have a listener, inform it of the deletion
-            if (mDeletedListener != null) {
-                mDeletedListener.itemDeleted();
-            }
-        }
-
-        // Update the item from the cursor
-        mItemViewer.updateFields(this);
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "Data changed!");
-    }
-
 
 
 }

@@ -225,7 +225,7 @@ public class EditActivityFragment extends Fragment
     public void onPause() {
         Log.d(TAG, "Closing the item");
         mItem.close();
-        super.onStop();
+        super.onPause();
     }
 
     // Interface methods ///////////////////////////////////////////////////////////////////////////
@@ -296,7 +296,11 @@ public class EditActivityFragment extends Fragment
     public void categorySelected(int category) {
         mItem.setCategory(category);
         // Make sure the category field is updated
-        updateFields(mItem);
+        View rootView = getView();
+        TextView categoryView = (TextView) rootView.findViewById(R.id.edit_category);
+        categoryView.setText(
+                Utilities.getCategoryString(getResources(), mItem.getCategory())
+        );
 
     }
 
@@ -370,7 +374,10 @@ public class EditActivityFragment extends Fragment
         GregorianCalendar date = new GregorianCalendar(year, month, day);
         mItem.setDate(date.getTimeInMillis());
         // update the UI
-        updateFields(mItem);
+        View rootView = getView();
+        TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
+        dateView.setText(mItem.getDateString());
+
     }
 
     @Override

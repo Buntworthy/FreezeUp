@@ -118,9 +118,7 @@ public class EditActivityFragment extends Fragment
 
                 mItem.shouldSave = true;
                 getTextFields();
-                // Send the user back to the main activity
-                Intent postSaveIntent = new Intent(getActivity(), MainActivity.class);
-                startActivity(postSaveIntent);
+                getActivity().finish();
 
             }
         });

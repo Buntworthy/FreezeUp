@@ -126,8 +126,7 @@ public class DetailActivityFragment
 
     @Override
     public void itemDeleted() {
-        Intent postDeleteIntent = new Intent(getActivity(), MainActivity.class);
-        startActivity(postDeleteIntent);
+        getActivity().finish();
     }
 
     @Override

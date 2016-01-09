@@ -47,6 +47,7 @@ public class Item {
     private int mQuantity = 1;
     private String mImagePath = "Dummy";
     private int mCategory = 0;
+    private boolean mLevel = false; // units: false=number, true=level
 
     public boolean shouldSave = false;
     public boolean imageChanged = false;
@@ -71,6 +72,7 @@ public class Item {
         mQuantity = 0;
         mItemViewer.updateFields(this);
         mCategory = 0;
+        mLevel = false;
     }
 
     public void loadItem(Cursor data) {
@@ -81,6 +83,7 @@ public class Item {
             mName = data.getString(data.getColumnIndex(Contract.COL_ITEM_NAME));
             mDate = data.getLong(data.getColumnIndex(Contract.COL_DATE));
             mQuantity = data.getInt(data.getColumnIndex(Contract.COL_QUANTITY));
+            if (mQuantity < 1) mLevel = true;
             mImagePath = data.getString(data.getColumnIndex(Contract.COL_IMAGE));
             mCategory = data.getInt(data.getColumnIndex(Contract.COL_CATEGORY));
         } else {
@@ -247,6 +250,8 @@ public class Item {
 
     public long getId() { return mId; }
 
+    public boolean getUnit() { return mLevel; }
+
     // Setters /////
     public void setName(String mName) {
         this.mName = mName;
@@ -263,6 +268,8 @@ public class Item {
     public void setCategory(int mCategory) { this.mCategory = mCategory; }
 
     public void setDeletedListener(ItemDeletedListener listener) { this.mDeletedListener = listener; }
+
+    public void setUnit(boolean level) { this.mLevel = level; }
 
 
 }

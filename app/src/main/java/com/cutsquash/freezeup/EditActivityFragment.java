@@ -57,7 +57,6 @@ public class EditActivityFragment extends Fragment
 
     private Item mItem;
     private Uri mfileUri;
-    private boolean mLevel = false;
 
     public EditActivityFragment() {
     }
@@ -242,7 +241,7 @@ public class EditActivityFragment extends Fragment
         TextView dateView = (TextView) rootView.findViewById(R.id.edit_date);
         dateView.setText(item.getDateString());
 
-        if (mLevel == false) {
+        if (mItem.getUnit() == false) {
             EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
             quantityView.setText(item.getQuantityString());
         }
@@ -278,13 +277,13 @@ public class EditActivityFragment extends Fragment
 
             case R.id.Number:
                 if (checked)
-                    mLevel = false;
+                    mItem.setUnit(false);
                     numberView.setVisibility(View.VISIBLE);
                     levelView.setVisibility(View.GONE);
                     break;
             case R.id.Level:
                 if (checked)
-                    mLevel = true;
+                    mItem.setUnit(true);
                     numberView.setVisibility(View.GONE);
                     levelView.setVisibility(View.VISIBLE);
                     // Use spinner for level input
@@ -311,7 +310,7 @@ public class EditActivityFragment extends Fragment
         EditText nameView = (EditText) rootView.findViewById(R.id.edit_name);
         mItem.setName(nameView.getText().toString());
 
-        if (mLevel == false) {
+        if (mItem.getUnit() == false) {
             EditText quantityView = (EditText) rootView.findViewById(R.id.edit_quantity_number);
             mItem.setQuantity(Integer.parseInt(quantityView.getText().toString()));
         }

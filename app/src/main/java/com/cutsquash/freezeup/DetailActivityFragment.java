@@ -93,9 +93,6 @@ public class DetailActivityFragment
         TextView dateView = (TextView) rootView.findViewById(R.id.detail_date);
         dateView.setText(item.getDateString());
 
-        TextView quantityView = (TextView) rootView.findViewById(R.id.detail_quantity);
-        quantityView.setText(item.getQuantityString());
-
         TextView categoryView = (TextView) rootView.findViewById(R.id.detail_category);
         categoryView.setText(
                 Utilities.getCategoryString(getResources(), item.getCategory())

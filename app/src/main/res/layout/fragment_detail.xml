@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_quantity"
-                    android:text="Quantity"
+                    android:text="Quantity:"
                     android:textSize="16sp"
                     android:paddingLeft="16dp"
                     android:layout_gravity="center_vertical"

@@ -36,6 +36,7 @@ import com.cutsquash.freezeup.utils.Utilities;
 
 import java.io.File;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -215,7 +216,6 @@ public class EditActivityFragment extends Fragment
             mItem = new Item(this, this, intent.getData());
             getLoaderManager().initLoader(EDIT_ITEM_LOADER, null, this);
             // Loader manager will call loadItem()
-            Log.d(TAG, "Made item");
         }
     }
 
@@ -250,18 +250,27 @@ public class EditActivityFragment extends Fragment
         );
 
         ImageView imageView = (ImageView) rootView.findViewById(R.id.edit_image);
-        File imageFile = new File(
-                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                mItem.getImagePath());
-        if (imageFile.exists()) {
-            Log.d(TAG, "Loading existing image");
-            Glide.with(this).load(imageFile).override(200, 200)
-                    .centerCrop().into(imageView);
-        } else {
-            Log.d(TAG, "No existing image");
+        String imagePath = mItem.getImagePath();
+
+        if (imagePath.equals(Item.PLACEHOLDER_IMAGE)) {
+            Log.d(TAG, "Loading placeholder image");
             Glide.with(this).load(R.drawable.placeholder).override(200, 200)
                     .centerCrop().into(imageView);
+        } else {
+            File imageFile = new File(
+                    getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    imagePath);
+            if (imageFile.exists()) {
+                Log.d(TAG, "Loading existing image");
+                Glide.with(this).load(imageFile).override(200, 200)
+                        .centerCrop().into(imageView);
+            } else {
+                Log.e(TAG, "Existing image not found");
+                Glide.with(this).load(R.drawable.placeholder).override(200, 200)
+                        .centerCrop().into(imageView);
+            }
         }
+
     }
 
     public void onRadioButtonClicked(View view) {
@@ -399,7 +408,6 @@ public class EditActivityFragment extends Fragment
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "Loader finished");
         mItem.loadItem(data);
         // Update the item from the cursor
         updateFields(mItem);

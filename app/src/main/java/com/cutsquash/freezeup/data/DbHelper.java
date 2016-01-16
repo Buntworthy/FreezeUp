@@ -38,6 +38,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Upgrading from version 1 to 2, add new column COL_CATEGORY
+        Log.d(TAG, "Upgrading DB");
         if (oldVersion == 1 && newVersion == 2) {
             final String UPGRADE_DB = "ALTER TABLE " + Contract.TABLE_NAME +
                     " ADD COLUMN " + Contract.COL_CATEGORY +

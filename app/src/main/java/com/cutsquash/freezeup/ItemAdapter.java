@@ -30,12 +30,28 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class ItemAdapter extends CursorAdapter {
 
     public static final String TAG = ItemAdapter.class.getSimpleName();
+
+    // Section headers from
+    // http://cyrilmottier.com/2011/07/05/listview-tips-tricks-2-section-your-listview/
+
+    private static final int STATE_UNKNOWN = 0;
+    private static final int STATE_SECTIONED = 1;
+    private static final int STATE_REGULAR = 2;
+
     private Fragment mFragment;
+    private int[] mCellStates;
 
     public ItemAdapter(Fragment fragment, Context context, Cursor c, int flags) {
 
         super(context, c, flags);
         this.mFragment = fragment;
+        mCellStates = c == null ? null : new int[c.getCount()];
+    }
+
+    @Override
+    public Cursor swapCursor(Cursor cursor) {
+        mCellStates = cursor == null ? null : new int[cursor.getCount()];
+        return super.swapCursor(cursor);
     }
 
     @Override
@@ -43,14 +59,64 @@ public class ItemAdapter extends CursorAdapter {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         //TODO undestand why false is required here
+        mCellStates = cursor == null ? null : new int[cursor.getCount()];
         return inflater.inflate(R.layout.item, parent, false);
     }
 
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
 
+
+        boolean needSeparator = false;
+        final int position = cursor.getPosition();
         final long itemId = cursor.getLong(cursor.getColumnIndex(Contract._ID));
 
+        // Set separator
+        int thisItemCategory = cursor.getInt(cursor.getColumnIndex(Contract.COL_CATEGORY));
+        if (mCellStates != null) {
+            switch (mCellStates[position]) {
+                case STATE_SECTIONED:
+                    needSeparator = true;
+                    break;
+
+                case STATE_REGULAR:
+                    needSeparator = false;
+                    break;
+
+                case STATE_UNKNOWN:
+                default:
+                    // A separator is needed if it's the first itemview of the
+                    // ListView or if the group of the current cell is different
+                    // from the previous itemview.
+                    if (position == 0) {
+                        needSeparator = true;
+                    } else {
+                        cursor.moveToPosition(position - 1);
+
+                        int prevItemCategory = cursor.getInt(cursor.getColumnIndex(Contract.COL_CATEGORY));
+                        if (thisItemCategory - prevItemCategory != 0) {
+                            needSeparator = true;
+                        }
+
+                        cursor.moveToPosition(position);
+                    }
+
+                    // Cache the result
+                    mCellStates[position] = needSeparator ? STATE_SECTIONED : STATE_REGULAR;
+                    break;
+            }
+
+            TextView separator = (TextView) view.findViewById(R.id.section);
+
+            if (needSeparator) {
+                separator.setText("Category");
+                separator.setVisibility(View.VISIBLE);
+            } else {
+                separator.setVisibility(View.GONE);
+            }
+        }
+
+        // Set text fields
         String itemName = cursor.getString(cursor.getColumnIndex(Contract.COL_ITEM_NAME));
         TextView nameView = (TextView) view.findViewById(R.id.item_name);
         nameView.setText(itemName);

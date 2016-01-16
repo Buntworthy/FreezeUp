@@ -31,6 +31,7 @@ import java.util.Date;
 public class Item {
 
     public static final String TAG = Item.class.getSimpleName();
+    public static final String PLACEHOLDER_IMAGE = "placeholder";
 
     public interface ItemDeletedListener {
         void itemDeleted();
@@ -45,7 +46,7 @@ public class Item {
     private String mName = "test";
     private long mDate = 1324354;
     private int mQuantity = 1;
-    private String mImagePath = "Dummy";
+    private String mImagePath = PLACEHOLDER_IMAGE;
     private int mCategory = 0;
     private boolean mLevel = false; // units: false=number, true=level
 
@@ -127,7 +128,7 @@ public class Item {
                 values.put(Contract.COL_CATEGORY, mCategory);
 
                 // Add the image path if it exists.
-                String imageString = "dummy";
+                String imageString = PLACEHOLDER_IMAGE;
                 if (imageChanged) {
 
                     // Check if there is an image waiting to be saved

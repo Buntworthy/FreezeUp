@@ -47,7 +47,9 @@ public class ItemProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
+
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Log.d(TAG, db.getPath());
         Cursor cursor;
 
         switch (sUriMatcher.match(uri)) {

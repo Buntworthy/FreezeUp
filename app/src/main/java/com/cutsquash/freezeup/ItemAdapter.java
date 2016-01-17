@@ -109,7 +109,9 @@ public class ItemAdapter extends CursorAdapter {
             TextView separator = (TextView) view.findViewById(R.id.section);
 
             if (needSeparator) {
-                separator.setText("Category");
+                separator.setText(
+                        Utilities.getCategoryString(mFragment.getResources(), thisItemCategory)
+                );
                 separator.setVisibility(View.VISIBLE);
             } else {
                 separator.setVisibility(View.GONE);

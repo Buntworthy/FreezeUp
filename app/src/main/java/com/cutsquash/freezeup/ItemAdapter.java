@@ -139,9 +139,16 @@ public class ItemAdapter extends CursorAdapter {
                     .centerCrop().bitmapTransform(new CropCircleTransformation(context))
                     .into(imageView);
         } else {
-            Glide.with(context).load(R.drawable.placeholder)
-                    .centerCrop().bitmapTransform(new CropCircleTransformation(context))
-                    .into(imageView);
+            int id = mFragment.getResources().getIdentifier(itemImage, "drawable", context.getPackageName());
+            if (id != 0) {
+                Glide.with(context).load(id)
+                        .centerCrop().bitmapTransform(new CropCircleTransformation(context))
+                        .into(imageView);
+            } else {
+                Glide.with(context).load(R.drawable.placeholder)
+                        .centerCrop().bitmapTransform(new CropCircleTransformation(context))
+                        .into(imageView);
+            }
         }
 
         String itemQantity = Utilities.quantityToShortString(cursor.getInt(

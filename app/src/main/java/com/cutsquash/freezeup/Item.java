@@ -151,7 +151,30 @@ public class Item {
                         values.put(Contract.COL_IMAGE, imageString);
                     }
 
+                } else {
+                    // use a default (category dependant image)
+                    switch (mCategory) {
+                        case 0:
+                            imageString = "placeholder1";
+                            break;
+                        case 1:
+                            imageString = "placeholder2";
+                            break;
+                        case 2:
+                            imageString = "placeholder3";
+                            break;
+                        case 3:
+                            imageString = "placeholder4";
+                            break;
+                        case 4:
+                            imageString = "placeholder5";
+                            break;
+                        case 5:
+                            imageString = "placeholder6";
+                            break;
+                    }
                 }
+                Log.d(TAG, "Selected image = " + imageString);
                 mImagePath = imageString;
                 values.put(Contract.COL_IMAGE, imageString);
 

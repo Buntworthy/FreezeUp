@@ -104,12 +104,13 @@ public class DetailActivityFragment
                 getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                 mItem.getImagePath());
         if (imageFile.exists()) {
-            Log.d(TAG, "Loaading existing image");
+            Log.d(TAG, "Loading existing image");
             Glide.with(this).load(imageFile)
                     .centerCrop().into(imageView);
         } else {
             Log.d(TAG, "No existing image");
-            Glide.with(this).load(R.drawable.placeholder)
+            int id = getResources().getIdentifier(mItem.getImagePath(), "drawable", getContext().getPackageName());
+            Glide.with(this).load(id)
                     .centerCrop().into(imageView);
         }
 

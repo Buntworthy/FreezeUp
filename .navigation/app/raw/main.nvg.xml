@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.cutsquash.freezeup.MainActivity"/>
+      <point      
+        x = "1848"      
+        y = "432"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.cutsquash.freezeup.EditActivity"/>
+      <point      
+        x = "2856"      
+        y = "248"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.cutsquash.freezeup.DetailActivity"/>
+      <point      
+        x = "600"      
+        y = "200"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>
